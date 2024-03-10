@@ -1,0 +1,57 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <title>SafeVault | Восстановление доступа</title>
+
+    {% include 'head.html' %}
+</head>
+
+<body class="bg-body-tertiary">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-9 col-lg-12">
+            <div class="card shadow-lg o-hidden border-0 my-5">
+                <div class="card-body p-0">
+                    <div class="row my-5">
+                        <div class="col-lg-6 d-none d-lg-flex">
+                            <div class="flex-grow-1 bg-login-image" style="background-image: url('{% static 'images/authorization/introduction3.jpg' %}');"></div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="p-5">
+                                <div class="text-center">
+                                    <h4 class="text-dark mb-4 fs-3" style="font-weight: bold;">SAFE VAULT</h4>
+                                    <p class="lead fs-5">Восстановление доступа</p>
+                                </div>
+                                <form id="formReset" name="formReset">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="formReset_email">Адрес электронной почты</label>
+                                        <input class="form-control fs-6 py-2" type="email" id="formReset_email" aria-describedby="emailHelp" name="formReset[email]" required="" maxlength="128">
+                                    </div>
+                                    <div class="mb-3">
+                                        <p class="text-danger fs-6">В случае изменения мастер-пароля все данные в хранилище будут <strong>удалены</strong>!<br><br>На почту будет отправлено письмо с ссылкой, по которой необходимо перейти для установления нового мастер-пароля и очистки хранилища.</p>
+                                    </div>
+                                    <button class="btn btn-dark btn-user w-100 fs-6" type="submit">Восстановить доступ</button>
+                                    <hr>
+                                </form>
+                                <div class="text-center">
+                                    <a class="small" href="{% url 'users:register' %}">Зарегистрироваться</a>
+                                </div>
+                                <div class="text-center">
+                                    <a class="small" href="{% url 'users:login' %}">Авторизоваться</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'scripts.html' %}
+</body>
+
+</html>

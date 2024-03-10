@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>SafeVault | Восстановление доступа</title>
+    <link rel="icon" type="image/png" sizes="512x512" href="../assets/img/icons/favicon.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="../assets/img/icons/favicon.png" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/png" sizes="512x512" href="../assets/img/icons/favicon.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="../assets/img/icons/favicon.png" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/png" sizes="512x512" href="../assets/img/icons/favicon.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="../assets/img/icons/favicon.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="../assets/img/icons/favicon.png">
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="../assets/css/libraries/toastify/toastify.css">
+    <link rel="stylesheet" href="../assets/css/Features-Cards-icons.css">
+    <link rel="stylesheet" href="../assets/css/main.compiled.css">
+</head>
+
+<body class="bg-body-tertiary">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-9 col-lg-12">
+                <div class="card shadow-lg o-hidden border-0 my-5">
+                    <div class="card-body p-0">
+                        <div class="row my-5">
+                            <div class="col-lg-6 d-none d-lg-flex">
+                                <div class="flex-grow-1 bg-login-image" style="background-image: url(&quot;../assets/img/authorization/introduction3.jpg&quot;);"></div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h4 class="text-dark mb-4 fs-3" style="font-weight: bold;">SAFE VAULT</h4>
+                                        <p class="lead fs-5">Восстановление доступа</p>
+                                    </div>
+                                    <form id="formReset" name="formReset">
+                                        <div class="mb-3"><label class="form-label" for="formReset_email">Адрес электронной почты</label><input class="form-control fs-6 py-2" type="email" id="formReset_email" aria-describedby="emailHelp" name="formReset[email]" required="" maxlength="128"></div>
+                                        <div class="mb-3">
+                                            <p class="text-danger fs-6">В случае изменения мастер-пароля все данные в хранилище будут <strong>удалены</strong>!<br><br>На почту будет отправлено письмо с ссылкой, по которой необходимо перейти для установления нового мастер-пароля и очистки хранилища.</p>
+                                        </div><button class="btn btn-dark btn-user w-100 fs-6" type="submit">Восстановить доступ</button>
+                                        <hr>
+                                    </form>
+                                    <div class="text-center"><a class="small" href="authorization/register.html">Зарегистрироваться</a></div>
+                                    <div class="text-center"><a class="small" href="authorization/login.html">Авторизоваться</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../assets/js/theme.js"></script>
+    <script src="../assets/js/libraries/toastify/toastify.js"></script>
+    <script src="../assets/js/libraries/argon2-browser/argon2.js"></script>
+</body>
+
+</html>

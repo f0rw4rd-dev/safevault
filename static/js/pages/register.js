@@ -1,0 +1,1 @@
+setupPasswordHandlers('id_master_password', 'formRegister_passwordStrength', 'formRegister_generatePassword');

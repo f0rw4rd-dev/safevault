@@ -1,0 +1,1 @@
+setupPasswordHandlers('formReset_password', 'formReset_passwordStrength', 'formReset_generatePassword');

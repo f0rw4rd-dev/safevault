@@ -1,0 +1,43 @@
+.pagination {
+  --bs-pagination-color: #808080;
+  --bs-pagination-hover-color: #6d6d6d;
+  --bs-pagination-active-color: #fff;
+  --bs-pagination-active-border-color: #3a3b45;
+  --bs-pagination-active-bg: #3a3b45;
+  --bs-pagination-hover-bg: #eaecf4; }
+
+.zoom {
+  transition: transform 0.3s ease;
+  display: inline-block; }
+  .zoom:hover {
+    transform: scale(1.15); }
+
+.btn-favorite i {
+  color: #3a3b45;
+  transition: transform 0.3s ease; }
+  .btn-favorite i:hover {
+    color: #fd7e14; }
+
+.btn-trash i {
+  color: #3a3b45;
+  transition: transform 0.3s ease; }
+  .btn-trash i:hover {
+    color: #e74a3b; }
+
+.btn-favorite-undo i {
+  color: #fd7e14;
+  transition: transform 0.3s ease; }
+  .btn-favorite-undo i:hover {
+    color: #3a3b45; }
+
+.btn-favorite-trash i {
+  color: #fd7e14;
+  transition: transform 0.3s ease; }
+  .btn-favorite-trash i:hover {
+    color: #3a3b45; }
+
+.form-check-input-dark:checked {
+  background-color: #3a3b45;
+  border-color: #3a3b45; }
+
+/*# sourceMappingURL=main.css.map */

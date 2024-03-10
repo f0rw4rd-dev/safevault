@@ -1,0 +1,66 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <title>SafeVault | Авторизация</title>
+
+    {% include 'head.html' %}
+</head>
+
+<body class="bg-body-tertiary">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-9 col-lg-12">
+            <div class="card shadow-lg o-hidden border-0 my-5">
+                <div class="card-body p-0">
+                    <div class="row my-5">
+                        <div class="col-lg-6 d-none d-lg-flex">
+                            <div class="flex-grow-1 bg-login-image" style="background-image: url('{% static 'images/authorization/introduction1.jpg' %}');"></div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="p-5">
+                                <div class="text-center">
+                                    <h4 class="text-dark mb-4 fs-3" style="font-weight: bold;">SAFE VAULT</h4>
+                                    <p class="lead fs-5">Авторизация</p>
+                                </div>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                        <label class="form-label" for="{{ form.email.id_for_label }}">{{ form.email.label_tag }}</label>
+                                        {{ form.email }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="{{ form.master_password.id_for_label }}">{{ form.master_password.label_tag }}</label>
+                                        {{ form.master_password }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="{{ form.tfa_code.id_for_label }}">{{ form.tfa_code.label_tag }}</label>
+                                        {{ form.tfa_code }}
+                                    </div>
+                                    <button class="btn btn-dark fs-6 w-100" type="submit">Авторизоваться</button>
+                                    <hr>
+                                </form>
+                                <div class="text-center">
+                                    <a class="small" href="{% url 'users:reset' %}">Восстановить доступ</a>
+                                </div>
+                                <div class="text-center">
+                                    <a class="small" href="{% url 'users:register' %}">Создать аккаунт</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'scripts.html' %}
+
+<script src="{% static 'libraries/argon2-browser/dist/argon2-bundled.min.js' %}"></script>
+<script src="{% static 'js/encryption.js' %}"></script>
+</body>
+
+</html>
