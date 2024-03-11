@@ -20,8 +20,8 @@ class UserManager(BaseUserManager):
 
         email = self.normalize_email(email)
         user = self.model(email=email, auth_key=auth_key, salt=salt, init_vector=init_vector, **extra_fields)
-        user.set_password(auth_key)
         user.save(using=self._db)
+
         return user
 
     def create_superuser(self, email, auth_key, salt, init_vector, **extra_fields):

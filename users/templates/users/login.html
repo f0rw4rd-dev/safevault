@@ -25,7 +25,7 @@
                                     <h4 class="text-dark mb-4 fs-3" style="font-weight: bold;">SAFE VAULT</h4>
                                     <p class="lead fs-5">Авторизация</p>
                                 </div>
-                                <form method="post">
+                                <form id="form_login" method="post">
                                     {% csrf_token %}
                                     <div class="mb-3">
                                         <label class="form-label" for="{{ form.email.id_for_label }}">{{ form.email.label_tag }}</label>
@@ -39,6 +39,7 @@
                                         <label class="form-label" for="{{ form.tfa_code.id_for_label }}">{{ form.tfa_code.label_tag }}</label>
                                         {{ form.tfa_code }}
                                     </div>
+                                    {{ form.auth_key }}
                                     <button class="btn btn-dark fs-6 w-100" type="submit">Авторизоваться</button>
                                     <hr>
                                 </form>
@@ -60,7 +61,17 @@
 {% include 'scripts.html' %}
 
 <script src="{% static 'libraries/argon2-browser/dist/argon2-bundled.min.js' %}"></script>
+<script src="{% static 'js/notifications.js' %}"></script>
 <script src="{% static 'js/encryption.js' %}"></script>
+<script src="{% static 'js/pages/login.js' %}"></script>
+
+{% if notification %}
+    {% if notification.redirectUrl %}
+        <script>{{ notification.func }}("{{ notification.text }}", "{{ notification.redirectUrl }}")</script>
+    {% else %}
+        <script>{{ notification.func }}("{{ notification.text }}")</script>
+    {% endif %}
+{% endif %}
 </body>
 
 </html>

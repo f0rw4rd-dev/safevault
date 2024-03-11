@@ -1,3 +1,19 @@
+function arrayBufferToHex(buffer) {
+    return Array.from(new Uint8Array(buffer))
+        .map(byte => byte.toString(16).padStart(2, '0'))
+        .join('');
+}
+
+function hexToArrayBuffer(hex) {
+    const bytes = new Uint8Array(hex.length / 2);
+
+    for (let i = 0; i < bytes.length; i++) {
+        bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+    }
+
+    return bytes;
+}
+
 async function generateKeyArgon2(password, salt, timeCost = 3, memoryCost = 65536, parallelism = 4, hashLen = 32) {
     salt = salt || crypto.getRandomValues(new Uint8Array(16));
     let key = await argon2.hash({
