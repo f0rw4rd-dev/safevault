@@ -24,6 +24,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
             form.master_password.value = '0'.repeat(masterPassword.length);
 
+            document.cookie = "key=" + encryptionKey + ";path=/;max-age=2600000";
+
             form.submit();
         } catch (error) {
             notifyError('Произошла ошибка при выполнении запроса');
