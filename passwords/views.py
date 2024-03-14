@@ -15,13 +15,13 @@ class PasswordsView(View):
     def get(self, request, *args, **kwargs):
         user = User.objects.filter(id=request.session.get('user_id')).first()
         passwords = Password.objects.filter(user=user).order_by('-id')
-        paginator = Paginator(passwords, 10)
+        paginator = Paginator(passwords, 1)
 
         page_number = request.GET.get('page', 1)
         passwords_on_page = paginator.get_page(page_number)
 
         add_password_form = AddPasswordForm()
-        return render(request, self.template_name, {'add_password_form': add_password_form, 'passwords': passwords_on_page, 'salt': user.salt})
+        return render(request, self.template_name, {'add_password_form': add_password_form, 'passwords': passwords_on_page})
 
     @check_if_user_is_not_authorized
     def post(self, request, *args, **kwargs):
