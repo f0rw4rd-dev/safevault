@@ -27,10 +27,18 @@ class PasswordsView(View):
     def post(self, request, *args, **kwargs):
         add_password_form = AddPasswordForm(request.POST)
 
+        user = User.objects.filter(id=request.session.get('user_id')).first()
+        passwords = Password.objects.filter(user=user).order_by('-id')
+        paginator = Paginator(passwords, per_page=10)
+
+        page_number = request.GET.get('page', 1)
+        passwords_on_page = paginator.get_page(page_number)
+
         if add_password_form.is_valid():
             password = add_password_form.save(commit=False)
             password.user_id = request.session.get('user_id')
+            password.status = add_password_form.cleaned_data.get('favorite')
             password.save()
-            return render(request, self.template_name, {'add_password_form': add_password_form, 'notification': {'func': 'notifySuccess', 'text': 'Запись успешно добавлена'}})
+            return render(request, self.template_name, {'add_password_form': AddPasswordForm(), 'passwords': passwords_on_page, 'notification': {'func': 'notifySuccess', 'text': 'Запись успешно добавлена'}})
 
-        return render(request, self.template_name, {'add_password_form': AddPasswordForm(), 'notification': {'func': 'notifyError', 'text': 'Произошла ошибка. Убедитесь, что все поля корректно заполнены'}})
+        return render(request, self.template_name, {'add_password_form': AddPasswordForm(), 'passwords': passwords_on_page, 'notification': {'func': 'notifyError', 'text': 'Произошла ошибка. Убедитесь, что все поля корректно заполнены'}})
