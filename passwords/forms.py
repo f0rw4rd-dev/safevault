@@ -17,6 +17,12 @@ class CheckboxInput(forms.CheckboxInput):
 class AddPasswordForm(forms.ModelForm):
     favorite = forms.BooleanField(label='Избранное', required=False, widget=CheckboxInput, label_suffix='')
 
+    def __init__(self, *args, **kwargs):
+        super(AddPasswordForm, self).__init__(*args, **kwargs)
+
+        for field in ('website', 'email', 'extra_data'):
+            self.fields[field].required = False
+
     class Meta:
         model = Password
         fields = ['title', 'website', 'login', 'email', 'password', 'extra_data', 'init_vector']

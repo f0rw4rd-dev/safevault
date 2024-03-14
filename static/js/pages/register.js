@@ -4,6 +4,17 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const form = e.target;
 
         const masterPassword = form.master_password.value;
+        const email = form.email.value;
+
+        if (!isEmailValid(email)) {
+            notifyError('Неверный формат электронной почты');
+            return null;
+        }
+
+        if (!isMasterPasswordValid(masterPassword)) {
+            notifyError('Пароль должен содержать от 8 до 128 символов, включая цифры, строчные и заглавные буквы, а также специальные символы');
+            return null;
+        }
 
         const salt = crypto.getRandomValues(new Uint8Array(16));
         const initVector = crypto.getRandomValues(new Uint8Array(16));

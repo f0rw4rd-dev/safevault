@@ -56,6 +56,48 @@ document.addEventListener('DOMContentLoaded', async (event) => {
             extra_data: form.extra_data.value
         };
 
+        // Check data
+        if (formData.title.trim().length === 0 || formData.login.trim().length === 0 || formData.password.trim().length === 0) {
+            notifyError('Все обязательные поля должны быть заполнены');
+            return null;
+        }
+
+        if (formData.email.trim().length > 0 && !isEmailValid(formData.email)) {
+            notifyError('Некорректный формат почты');
+            return null;
+        }
+
+        if (formData.website.trim().length > 0 && !isURLValid(formData.website)) {
+            notifyError('Некорректный формат адреса веб-сайта, он должен быть полным');
+            return null;
+        }
+
+        if (formData.title.trim().length > 48) {
+            notifyError('Название заголовка не должно превышать 48 символов');
+            return null;
+        }
+
+        if (formData.title.trim().length > 256) {
+            notifyError('Адрес веб-сайта не должен превышать 256 символов');
+            return null;
+        }
+
+        if (formData.login.trim().length > 128) {
+            notifyError('Логин не должен превышать 128 символов');
+            return null;
+        }
+
+        if (formData.password.trim().length > 128) {
+            notifyError('Пароль не должен превышать 128 символов');
+            return null;
+        }
+
+        if (formData.extra_data.trim().length > 4096) {
+            notifyError('Дополнительные данные не должны превышать 4096 символов');
+            return null;
+        }
+
+        // Encrypt all data
         const encryptedData = await Promise.all(
             Object.entries(formData).map(async ([key, value]) => ({
                 [key]: arrayBufferToHex(await encryptAES(hexToArrayBuffer(encryptionKey), value, initVector))
