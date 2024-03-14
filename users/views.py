@@ -11,14 +11,14 @@ class LoginView(View):
 
     @check_if_user_is_authorized
     def get(self, request, *args, **kwargs):
-        form = LoginForm()
-        return render(request, self.template_name, {'form': form})
+        login_form = LoginForm()
+        return render(request, self.template_name, {'login_form': login_form})
 
     @check_if_user_is_authorized
     def post(self, request, *args, **kwargs):
-        form = LoginForm(request.POST)
+        login_form = LoginForm(request.POST)
 
-        if form.is_valid():
+        if login_form.is_valid():
             email = request.POST.get('email')
             auth_key = request.POST.get('auth_key')
 
@@ -26,11 +26,11 @@ class LoginView(View):
 
             if user:
                 request.session['user_id'] = user.id
-                return render(request, self.template_name, {'form': form, 'notification': {'func': 'notifySuccess', 'text': 'Вы успешно авторизованы', 'redirectUrl': f'{request.scheme}://{request.get_host()}{reverse('passwords:list')}'}})
+                return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifySuccess', 'text': 'Вы успешно авторизованы', 'redirectUrl': f'{request.scheme}://{request.get_host()}{reverse('passwords:passwords')}'}})
 
-            return render(request, self.template_name, {'form': form, 'notification': {'func': 'notifyError', 'text': 'Введены некорректные данные'}})
+            return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifyError', 'text': 'Введены некорректные данные'}})
 
-        return render(request, self.template_name, {'form': form, 'notification': {'func': 'notifyError', 'text': 'Произошла ошибка. Убедитесь, что все поля корректно заполнены'}})
+        return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifyError', 'text': 'Произошла ошибка. Убедитесь, что все поля корректно заполнены'}})
 
 
 class RegisterView(View):
@@ -38,24 +38,24 @@ class RegisterView(View):
 
     @check_if_user_is_authorized
     def get(self, request, *args, **kwargs):
-        form = RegisterForm()
-        return render(request, self.template_name, {'form': form})
+        register_form = RegisterForm()
+        return render(request, self.template_name, {'register_form': register_form})
 
     @check_if_user_is_authorized
     def post(self, request, *args, **kwargs):
-        form = RegisterForm(request.POST)
+        register_form = RegisterForm(request.POST)
 
-        if form.is_valid():
-            email = form.cleaned_data['email']
+        if register_form.is_valid():
+            email = register_form.cleaned_data['email']
 
             if User.objects.filter(email=email).exists():
-                return render(request, self.template_name, {'form': form, 'notification': {'func': 'notifyError', 'text': 'Пользователь с данным адресом электронной почты уже существует'}})
+                return render(request, self.template_name, {'register_form': RegisterForm(), 'notification': {'func': 'notifyError', 'text': 'Пользователь с данным адресом электронной почты уже существует'}})
 
-            form.save()
+            register_form.save()
 
-            return render(request, self.template_name, {'form': form, 'notification': {'func': 'notifySuccess', 'text': 'Вы успешно зарегистрировались, выполните авторизацию', 'redirectUrl': f'{request.scheme}://{request.get_host()}{reverse('users:login')}'}})
+            return render(request, self.template_name, {'register_form': RegisterForm(), 'notification': {'func': 'notifySuccess', 'text': 'Вы успешно зарегистрировались, выполните авторизацию', 'redirectUrl': f'{request.scheme}://{request.get_host()}{reverse('users:login')}'}})
 
-        return render(request, self.template_name, {'form': form, 'notification': {'func': 'notifyError', 'text': 'Произошла ошибка. Убедитесь, что все поля корректно заполнены'}})
+        return render(request, self.template_name, {'register_form': RegisterForm(), 'notification': {'func': 'notifyError', 'text': 'Произошла ошибка. Убедитесь, что все поля корректно заполнены'}})
 
 
 class ResetView(View):

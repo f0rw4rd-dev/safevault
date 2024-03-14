@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', (event) => {
-    document.getElementById('form_register').addEventListener('submit', async function (e) {
+    document.getElementById('id_form_register').addEventListener('submit', async function (e) {
         e.preventDefault();
         const form = e.target;
 
@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const salt = crypto.getRandomValues(new Uint8Array(16));
         const initVector = crypto.getRandomValues(new Uint8Array(16));
         const encryptionKey = await generateKeyArgon2(masterPassword, salt);
-        const authKey = await encryptAES(encryptionKey, masterPassword + salt, salt, initVector);
+        const authKey = await encryptAES(encryptionKey, masterPassword + salt, initVector);
 
         form.auth_key.value = arrayBufferToHex(authKey);
         form.salt.value = arrayBufferToHex(salt)
@@ -20,4 +20,4 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 });
 
-setupPasswordHandlers('id_master_password', 'formRegister_passwordStrength', 'formRegister_generatePassword');
+setupPasswordHandlers('id_master_password', 'id_password_strength', 'id_generate_password');

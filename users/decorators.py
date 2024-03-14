@@ -4,7 +4,7 @@ from django.shortcuts import redirect, reverse
 def check_if_user_is_authorized(func):
     def wrapper(self, request, *args, **kwargs):
         if request.session.get('user_id'):
-            return redirect(reverse('passwords:list'))
+            return redirect(reverse('passwords:passwords'))
 
         return func(self, request, *args, **kwargs)
 

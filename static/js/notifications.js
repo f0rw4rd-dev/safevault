@@ -1,7 +1,7 @@
 function notifySuccess(text, redirectUrl = null) {
     Toastify({
         text: text,
-        duration: 2000,
+        duration: 1500,
         newWindow: true,
         // close: true,
         gravity: "top",
@@ -20,7 +20,7 @@ function notifySuccess(text, redirectUrl = null) {
 function notifyError(text, redirectUrl = null) {
     Toastify({
         text: text,
-        duration: 2000,
+        duration: 1500,
         newWindow: true,
         // close: true,
         gravity: "top",
@@ -39,7 +39,7 @@ function notifyError(text, redirectUrl = null) {
 function notifyWarning(text, redirectUrl = null) {
     Toastify({
         text: text,
-        duration: 2000,
+        duration: 1500,
         newWindow: true,
         // close: true,
         gravity: "top",

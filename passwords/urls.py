@@ -4,5 +4,5 @@ from . import views
 
 app_name = 'passwords'
 urlpatterns = [
-    path('', views.ListView.as_view(), name='list')
+    path('', views.PasswordsView.as_view(), name='passwords')
 ]

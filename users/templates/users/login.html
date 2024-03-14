@@ -25,21 +25,21 @@
                                     <h4 class="text-dark mb-4 fs-3" style="font-weight: bold;">SAFE VAULT</h4>
                                     <p class="lead fs-5">Авторизация</p>
                                 </div>
-                                <form id="form_login" method="post">
+                                <form id="id_form_login" method="post">
                                     {% csrf_token %}
                                     <div class="mb-3">
-                                        <label class="form-label" for="{{ form.email.id_for_label }}">{{ form.email.label_tag }}</label>
-                                        {{ form.email }}
+                                        <label class="form-label" for="{{ login_form.email.id_for_label }}">{{ login_form.email.label_tag }}</label>
+                                        {{ login_form.email }}
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label" for="{{ form.master_password.id_for_label }}">{{ form.master_password.label_tag }}</label>
-                                        {{ form.master_password }}
+                                        <label class="form-label" for="{{ login_form.master_password.id_for_label }}">{{ login_form.master_password.label_tag }}</label>
+                                        {{ login_form.master_password }}
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label" for="{{ form.tfa_code.id_for_label }}">{{ form.tfa_code.label_tag }}</label>
-                                        {{ form.tfa_code }}
+                                        <label class="form-label" for="{{ login_form.tfa_code.id_for_label }}">{{ login_form.tfa_code.label_tag }}</label>
+                                        {{ login_form.tfa_code }}
                                     </div>
-                                    {{ form.auth_key }}
+                                    {{ login_form.auth_key }}
                                     <button class="btn btn-dark fs-6 w-100" type="submit">Авторизоваться</button>
                                     <hr>
                                 </form>
@@ -62,6 +62,7 @@
 
 <script src="{% static 'libraries/argon2-browser/dist/argon2-bundled.min.js' %}"></script>
 <script src="{% static 'js/encryption.js' %}"></script>
+<script src="{% static 'js/users.js' %}"></script>
 <script src="{% static 'js/pages/login.js' %}"></script>
 
 {% if notification %}

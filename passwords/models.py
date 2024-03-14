@@ -3,9 +3,10 @@ from django.utils import timezone
 
 
 class Password(models.Model):
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='password_records')
     title = models.CharField(max_length=480, blank=False, null=False)
     website = models.CharField(max_length=2560)
-    login = models.CharField(max_length=1280)
+    login = models.CharField(max_length=1280, blank=False, null=False)
     email = models.CharField(max_length=1280)
     password = models.CharField(max_length=1280, blank=False, null=False)
     extra_data = models.CharField(max_length=40960)
