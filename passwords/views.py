@@ -39,6 +39,6 @@ class PasswordsView(View):
             password.user_id = request.session.get('user_id')
             password.status = add_password_form.cleaned_data.get('favorite')
             password.save()
-            return render(request, self.template_name, {'add_password_form': AddPasswordForm(), 'passwords': passwords_on_page, 'notification': {'func': 'notifySuccess', 'text': 'Запись успешно добавлена'}})
+            return render(request, self.template_name, {'add_password_form': AddPasswordForm(), 'passwords': passwords_on_page, 'notification': {'func': 'notifySuccess', 'text': 'Запись успешно добавлена', 'redirectUrl': f'{request.scheme}://{request.get_host()}{reverse('passwords:passwords')}'}})
 
         return render(request, self.template_name, {'add_password_form': AddPasswordForm(), 'passwords': passwords_on_page, 'notification': {'func': 'notifyError', 'text': 'Произошла ошибка. Убедитесь, что все поля корректно заполнены'}})
