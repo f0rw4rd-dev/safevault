@@ -39,6 +39,8 @@ document.addEventListener('DOMContentLoaded', async (event) => {
         }
     }
 
+    setupCopyTextToClipboard();
+
     document.getElementById('id_form_add_password').addEventListener('submit', async function (e) {
         e.preventDefault();
         const form = e.target;

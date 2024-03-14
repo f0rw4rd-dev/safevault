@@ -15,7 +15,7 @@ class PasswordsView(View):
     def get(self, request, *args, **kwargs):
         user = User.objects.filter(id=request.session.get('user_id')).first()
         passwords = Password.objects.filter(user=user).order_by('-id')
-        paginator = Paginator(passwords, 1)
+        paginator = Paginator(passwords, per_page=10)
 
         page_number = request.GET.get('page', 1)
         passwords_on_page = paginator.get_page(page_number)

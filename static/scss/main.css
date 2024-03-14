@@ -40,4 +40,7 @@
   background-color: #3a3b45;
   border-color: #3a3b45; }
 
+.dropdown-menu {
+  --bs-dropdown-link-active-bg: #3a3b45; }
+
 /*# sourceMappingURL=main.css.map */
