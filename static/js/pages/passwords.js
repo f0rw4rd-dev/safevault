@@ -155,3 +155,67 @@ function setupFormSubmit(formId, encryptionKey) {
         form.submit()
     });
 }
+
+async function updatePasswordStatus(id, status) {
+    const url = `${window.location.origin}/passwords/api/update/status/`;
+    const data = {id: id, status: status};
+    const csrftoken = getCookie('csrftoken');
+    const errorMessage = 'Не удалось выполнить действие';
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            throw new Error('');
+        }
+
+        const jsonResponse = await response.json();
+
+        if (jsonResponse.status === 'ok') {
+            notifySuccess('Запись успешно обновлена', window.location.href);
+        } else {
+            notifyError(errorMessage);
+        }
+    } catch (error) {
+        notifyError(errorMessage);
+    }
+}
+
+async function deletePassword(id) {
+    const url = `${window.location.origin}/passwords/api/delete/`;
+    const data = {id: id};
+    const csrftoken = getCookie('csrftoken');
+    const errorMessage = 'Не удалось выполнить действие';
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            throw new Error('');
+        }
+
+        const jsonResponse = await response.json();
+
+        if (jsonResponse.status === 'ok') {
+            notifySuccess('Запись успешно удалена', window.location.href);
+        } else {
+            notifyError(errorMessage);
+        }
+    } catch (error) {
+        notifyError(errorMessage);
+    }
+}
