@@ -30,10 +30,10 @@
   .btn-favorite-undo i:hover {
     color: #3a3b45; }
 
-.btn-favorite-trash i {
+.btn-trash-undo i {
   color: #fd7e14;
   transition: transform 0.3s ease; }
-  .btn-favorite-trash i:hover {
+  .btn-trash-undo i:hover {
     color: #3a3b45; }
 
 .form-check-input-dark:checked {

@@ -21,6 +21,12 @@ class PasswordsView(View):
         operation = request.POST.get('operation')
         password_id = request.POST.get('id')
 
+        try:
+            if password_id is not None:
+                int(password_id)
+        except (TypeError, ValueError):
+            return self.handle_request(request)
+
         if operation == 'add':
             form = AddPasswordForm(request.POST)
             notification_text = 'Запись успешно добавлена'
@@ -51,7 +57,19 @@ class PasswordsView(View):
 
     def handle_request(self, request, **kwargs):
         user = User.objects.get(id=request.session.get('user_id'))
-        passwords = Password.objects.filter(user=user).order_by('-id')
+
+        try:
+            status = int(request.GET.get('status', '0'))
+        except (TypeError, ValueError):
+            status = 0
+
+        if status == 0:
+            passwords = Password.objects.filter(user=user, status__in=[0, 1]).order_by('-id')
+        elif status in [1, 2]:
+            passwords = Password.objects.filter(user=user, status=status).order_by('-id')
+        else:
+            passwords = Password.objects.filter(user=user).order_by('-id')
+
         paginator = Paginator(passwords, per_page=10)
         page_number = request.GET.get('page', 1)
         passwords_on_page = paginator.get_page(page_number)
@@ -60,7 +78,8 @@ class PasswordsView(View):
             'add_password_form': AddPasswordForm(),
             'edit_password_form': EditPasswordForm(),
             'passwords': passwords_on_page,
-            'notification': kwargs.get('notification')
+            'notification': kwargs.get('notification'),
+            'status': str(status)
         }
 
         return render(request, self.template_name, context)
