@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', async (event) => {
 
             const form = document.getElementById('id_form_edit_password');
 
+            const favorite = e.currentTarget.getAttribute('data-status') === '1';
             const initVector = e.currentTarget.getAttribute('data-init-vector');
             const id = e.currentTarget.getAttribute('data-id');
 
@@ -62,6 +63,7 @@ document.addEventListener('DOMContentLoaded', async (event) => {
                 }
             }
 
+            form.elements['favorite'].checked = favorite;
             form.elements['init_vector'].value = initVector;
             form.elements['id'].value = id;
         });

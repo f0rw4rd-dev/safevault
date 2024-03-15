@@ -26,11 +26,16 @@ class LoginView(View):
 
             if user:
                 request.session['user_id'] = user.id
-                return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifySuccess', 'text': 'Вы успешно авторизованы', 'redirectUrl': f'{request.scheme}://{request.get_host()}{reverse('passwords:passwords')}'}})
 
-            return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifyError', 'text': 'Введены некорректные данные'}})
+                notification_text = 'Вы успешно авторизованы'
+                notification_redirect_url = f'{request.scheme}://{request.get_host()}{reverse('passwords:passwords')}'
+                return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifySuccess', 'text': notification_text, 'redirectUrl': notification_redirect_url}})
 
-        return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifyError', 'text': 'Произошла ошибка. Убедитесь, что все поля корректно заполнены'}})
+            notification_text = 'Введены некорректные данные'
+            return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifyError', 'text': notification_text}})
+
+        notification_text = 'Убедитесь, что все поля корректно заполнены'
+        return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifyError', 'text': notification_text}})
 
 
 class RegisterView(View):
@@ -49,13 +54,17 @@ class RegisterView(View):
             email = register_form.cleaned_data['email']
 
             if User.objects.filter(email=email).exists():
-                return render(request, self.template_name, {'register_form': RegisterForm(), 'notification': {'func': 'notifyError', 'text': 'Пользователь с данным адресом электронной почты уже существует'}})
+                notification_text = 'Пользователь с данным адресом электронной почты уже существует'
+                return render(request, self.template_name, {'register_form': RegisterForm(), 'notification': {'func': 'notifyError', 'text': notification_text}})
 
             register_form.save()
 
-            return render(request, self.template_name, {'register_form': RegisterForm(), 'notification': {'func': 'notifySuccess', 'text': 'Вы успешно зарегистрировались, выполните авторизацию', 'redirectUrl': f'{request.scheme}://{request.get_host()}{reverse('users:login')}'}})
+            notification_text = 'Вы успешно зарегистрировались, выполните авторизацию'
+            notification_redirect_url = f'{request.scheme}://{request.get_host()}{reverse('users:login')}'
+            return render(request, self.template_name, {'register_form': RegisterForm(), 'notification': {'func': 'notifySuccess', 'text': notification_text, 'redirectUrl': notification_redirect_url}})
 
-        return render(request, self.template_name, {'register_form': RegisterForm(), 'notification': {'func': 'notifyError', 'text': 'Произошла ошибка. Убедитесь, что все поля корректно заполнены'}})
+        notification_text = 'Убедитесь, что все поля корректно заполнены'
+        return render(request, self.template_name, {'register_form': RegisterForm(), 'notification': {'func': 'notifyError', 'text': notification_text}})
 
 
 class ResetView(View):
