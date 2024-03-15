@@ -1,1 +1,1 @@
-setupPasswordHandlers('id_master_password', 'id_password_strength', 'id_generate_password');
+setupPasswordGeneratorAndStrengthEstimation('id_master_password', 'id_password_strength', 'id_generate_password');

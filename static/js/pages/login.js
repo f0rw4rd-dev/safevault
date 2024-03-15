@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', (event) => {
+    setupLoginFormSubmit();
+});
+
+function setupLoginFormSubmit() {
     document.getElementById('id_form_login').addEventListener('submit', async function (e) {
         e.preventDefault();
         const form = e.target;
@@ -26,4 +30,4 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         form.submit();
     });
-});
+}

@@ -1,4 +1,4 @@
-function setupPasswordHandlers(passwordId, passwordStrengthId, generatePasswordId) {
+function setupPasswordGeneratorAndStrengthEstimation(passwordId, passwordStrengthId, generatePasswordId) {
     document.getElementById(generatePasswordId).onclick = function () {
         const newPassword = generatePassword(16, true, true, true);
         const inputElement = document.getElementById(passwordId);

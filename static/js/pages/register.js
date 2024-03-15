@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', (event) => {
+    setupRegisterFormSubmit();
+    setupPasswordGeneratorAndStrengthEstimation('id_master_password', 'id_password_strength', 'id_generate_password');
+});
+
+function setupRegisterFormSubmit() {
     document.getElementById('id_form_register').addEventListener('submit', async function (e) {
         e.preventDefault();
         const form = e.target;
@@ -29,6 +34,4 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         form.submit();
     });
-});
-
-setupPasswordHandlers('id_master_password', 'id_password_strength', 'id_generate_password');
+}

@@ -1,1 +1,1 @@
-setupPasswordHandlers('formRegister_password', 'formRegister_passwordStrength', 'formRegister_generatePassword');
+setupPasswordGeneratorAndStrengthEstimation('formRegister_password', 'formRegister_passwordStrength', 'formRegister_generatePassword');
