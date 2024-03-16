@@ -24,4 +24,5 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('passwords/', include('passwords.urls')),
     path('bankcards/', include('bankcards.urls')),
+    path('notes/', include('notes.urls')),
 ]
