@@ -4,7 +4,7 @@
 <html data-bs-theme="light" lang="en">
 
 <head>
-    <title>SafeVault | Банковские карты</title>
+    <title>SafeVault | Адреса</title>
 
     {% include 'head.html' %}
 </head>
@@ -22,16 +22,16 @@
                     <div class="card-header py-3">
                         <div class="row">
                             <div class="col-12 col-sm-12 col-md-auto col-lg-auto col-xl-auto col-xxl-auto col-auto">
-                                <h2 class="text-dark mb-0" style="font-weight: bold;">Банковские карты</h2>
+                                <h2 class="text-dark mb-0" style="font-weight: bold;">Адреса</h2>
                             </div>
                             <div class="col-12 col-sm-12 col-md col-lg col-xl-auto col-xxl-auto col-auto">
                                 <div class="btn-group" role="group">
                                     {% if status == '0' %}
-                                        <a href="{% url 'bankcards:bankcards' %}?status=1" class="btn link-dark zoom ps-0 border-0 btn-favorite" role="button">
+                                        <a href="{% url 'addresses:addresses' %}?status=1" class="btn link-dark zoom ps-0 border-0 btn-favorite" role="button">
                                             <i class="far fa-star fs-4 align-text-bottom"></i>
                                         </a>
                                     {% elif status == '1' %}
-                                        <a href="{% url 'bankcards:bankcards' %}?status=0" class="btn link-dark zoom ps-0 border-0 btn-favorite-undo" role="button">
+                                        <a href="{% url 'addresses:addresses' %}?status=0" class="btn link-dark zoom ps-0 border-0 btn-favorite-undo" role="button">
                                             <i class="far fa-star fs-4 align-text-bottom"></i>
                                         </a>
                                     {% elif status == '2' %}
@@ -41,7 +41,7 @@
                                     {% endif %}
 
                                     {% if status == '0' %}
-                                        <a href="{% url 'bankcards:bankcards' %}?status=2" class="btn link-dark zoom border-0 btn-trash" type="button">
+                                        <a href="{% url 'addresses:addresses' %}?status=2" class="btn link-dark zoom border-0 btn-trash" type="button">
                                             <i class="far fa-trash-alt fs-4 align-text-bottom"></i>
                                         </a>
                                     {% elif status == '1' %}
@@ -49,7 +49,7 @@
                                             <i class="far fa-trash-alt fs-4 align-text-bottom"></i>
                                         </a>
                                     {% elif status == '2' %}
-                                        <a href="{% url 'bankcards:bankcards' %}?status=0" class="btn link-dark zoom border-0 btn-trash-undo" type="button">
+                                        <a href="{% url 'addresses:addresses' %}?status=0" class="btn link-dark zoom border-0 btn-trash-undo" type="button">
                                             <i class="far fa-trash-alt fs-4 align-text-bottom"></i>
                                         </a>
                                     {% endif %}
@@ -62,7 +62,7 @@
                                             <i class="fas fa-plus fa-sm text-white-50"></i>&nbsp; Добавить
                                         </a>
                                     {% else %}
-                                        <a class="btn btn-dark btn-sm my-1 ms-0 me-2 me-sm-1" role="button" href="#" data-bs-toggle="modal" data-bs-target="#modal-add-bankcard">
+                                        <a class="btn btn-dark btn-sm my-1 ms-0 me-2 me-sm-1" role="button" href="#" data-bs-toggle="modal" data-bs-target="#modal-add-address">
                                             <i class="fas fa-plus fa-sm text-white-50"></i>&nbsp; Добавить
                                         </a>
                                     {% endif %}
@@ -75,21 +75,32 @@
                     </div>
                     <div class="card-body">
                         <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-4 row-cols-xxl-5 p-2">
-                            {% for bankcard in bankcards %}
+                            {% for address in addresses %}
                                 <div class="col">
                                     <div class="card border rounded">
                                         <div class="card-header">
-                                            <h5 class="text-dark mb-0 mt-1 record_bankcard" data-init-vector="{{ bankcard.init_vector }}">{{ bankcard.title }}</h5>
+                                            <h5 class="text-dark mb-0 mt-1 record_address" data-init-vector="{{ address.init_vector }}">{{ address.title }}</h5>
                                         </div>
                                         <div class="card-body text-center py-4">
                                             <form>
                                                 <div class="input-group input-group-sm">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text" id="inputGroup-sizing-sm">
-                                                            <i class="fas fa-credit-card text-dark"></i>
+                                                            <i class="far fa-credit-card text-dark"></i>
                                                         </span>
                                                     </div>
-                                                    <input class="form-control record_bankcard" type="text" readonly="" value="{{ bankcard.card_number }}" data-init-vector="{{ bankcard.init_vector }}" style="color: var(--bs-dark);">
+                                                    <input class="form-control record_address" type="text" readonly="" value="{{ address.country }}" data-init-vector="{{ address.init_vector }}" style="color: var(--bs-dark);">
+                                                    <button class="btn btn-dark btn-copy" type="button">
+                                                        <i class="fas fa-flag"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="input-group input-group-sm mt-2">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="inputGroup-sizing-sm">
+                                                            <i class="fas fa-map text-dark"></i>
+                                                        </span>
+                                                    </div>
+                                                    <input class="form-control record_address" type="text" readonly="" value="{{ address.locality }}" data-init-vector="{{ address.init_vector }}" style="color: var(--bs-dark);">
                                                     <button class="btn btn-dark btn-copy" type="button">
                                                         <i class="far fa-copy"></i>
                                                     </button>
@@ -97,10 +108,10 @@
                                                 <div class="input-group input-group-sm mt-2">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text" id="inputGroup-sizing-sm">
-                                                            <i class="fas fa-calendar-day text-dark"></i>
+                                                            <i class="fas fa-map-marker-alt text-dark"></i>
                                                         </span>
                                                     </div>
-                                                    <input class="form-control record_bankcard" type="password" readonly="" value="{{ bankcard.card_expiration_month }}" data-init-vector="{{ bankcard.init_vector }}" style="color: var(--bs-dark);">
+                                                    <input class="form-control record_address" type="text" readonly="" value="{{ address.street }}" data-init-vector="{{ address.init_vector }}" style="color: var(--bs-dark);">
                                                     <button class="btn btn-dark btn-copy" type="button">
                                                         <i class="far fa-copy"></i>
                                                     </button>
@@ -108,21 +119,10 @@
                                                 <div class="input-group input-group-sm mt-2">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text" id="inputGroup-sizing-sm">
-                                                            <i class="fas fa-calendar text-dark"></i>
+                                                            <i class="fas fa-home text-dark"></i>
                                                         </span>
                                                     </div>
-                                                    <input class="form-control record_bankcard" type="password" readonly="" value="{{ bankcard.card_expiration_year }}" data-init-vector="{{ bankcard.init_vector }}" style="color: var(--bs-dark);">
-                                                    <button class="btn btn-dark btn-copy" type="button">
-                                                        <i class="far fa-copy"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="input-group input-group-sm mt-2">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text" id="inputGroup-sizing-sm">
-                                                            <i class="fas fa-key text-dark"></i>
-                                                        </span>
-                                                    </div>
-                                                    <input class="form-control record_bankcard" type="password" readonly="" value="{{ bankcard.card_security_code }}" data-init-vector="{{ bankcard.init_vector }}" style="color: var(--bs-dark);">
+                                                    <input class="form-control record_address" type="text" readonly="" value="{{ address.house }}" data-init-vector="{{ address.init_vector }}" style="color: var(--bs-dark);">
                                                     <button class="btn btn-dark btn-copy" type="button">
                                                         <i class="far fa-copy"></i>
                                                     </button>
@@ -131,33 +131,33 @@
                                             <hr>
                                             <div class="btn-group" role="group">
                                                 {% if status == '0' %}
-                                                    <button class="btn link-dark zoom border-0 btn-edit-bankcard" type="button" data-bs-toggle="modal" data-bs-target="#modal-edit-bankcard" data-id="{{ bankcard.id }}" data-title="{{ bankcard.title }}" data-card-number="{{ bankcard.card_number }}" data-card-expiration-month="{{ bankcard.card_expiration_month }}" data-card-expiration-year="{{ bankcard.card_expiration_year }}" data-card-security-code="{{ bankcard.card_security_code }}" data-card-pin="{{ bankcard.card_pin }}" data-cardholder-name="{{ bankcard.cardholder_name }}" data-extra-data="{{ bankcard.extra_data }}" data-init-vector="{{ bankcard.init_vector }}" data-status="{{ bankcard.status }}">
+                                                    <button class="btn link-dark zoom border-0 btn-edit-address" type="button" data-bs-toggle="modal" data-bs-target="#modal-edit-address" data-id="{{ address.id }}" data-title="{{ address.title }}" data-country="{{ address.country }}" data-region="{{ address.region }}" data-locality="{{ address.locality }}" data-street="{{ address.street }}" data-house="{{ address.house }}" data-zip_code="{{ address.zip_code }}" data-extra-data="{{ address.extra_data }}" data-init-vector="{{ address.init_vector }}" data-status="{{ address.status }}">
                                                         <i class="fas fa-expand-alt fs-5"></i>
                                                     </button>
 
-                                                    {% if bankcard.status == 0 %}
-                                                        <button class="btn link-dark zoom border-0 btn-favorite" type="button" onclick="updateBankcardStatus({{ bankcard.id }}, 1)">
+                                                    {% if address.status == 0 %}
+                                                        <button class="btn link-dark zoom border-0 btn-favorite" type="button" onclick="updateAddressStatus({{ address.id }}, 1)">
                                                             <i class="far fa-star fs-5"></i>
                                                         </button>
-                                                    {% elif bankcard.status == 1 %}
-                                                        <button class="btn link-dark zoom border-0 btn-favorite-undo" type="button" onclick="updateBankcardStatus({{ bankcard.id }}, 0)">
+                                                    {% elif address.status == 1 %}
+                                                        <button class="btn link-dark zoom border-0 btn-favorite-undo" type="button" onclick="updateAddressStatus({{ address.id }}, 0)">
                                                             <i class="far fa-star fs-5"></i>
                                                         </button>
                                                     {% endif %}
 
-                                                    <button class="btn link-dark zoom border-0 btn-trash" type="button" onclick="updateBankcardStatus({{ bankcard.id }}, 2)">
+                                                    <button class="btn link-dark zoom border-0 btn-trash" type="button" onclick="updateAddressStatus({{ address.id }}, 2)">
                                                         <i class="far fa-trash-alt fs-5"></i>
                                                     </button>
                                                 {% elif status == '1' %}
-                                                    <button class="btn link-dark zoom border-0 btn-edit-bankcard" type="button" data-bs-toggle="modal" data-bs-target="#modal-edit-bankcard" data-id="{{ bankcard.id }}" data-title="{{ bankcard.title }}" data-card-number="{{ bankcard.card_number }}" data-card-expiration-month="{{ bankcard.card_expiration_month }}" data-card-expiration-year="{{ bankcard.card_expiration_year }}" data-card-security-code="{{ bankcard.card_security_code }}" data-card-pin="{{ bankcard.card_pin }}" data-cardholder-name="{{ bankcard.cardholder_name }}" data-extra-data="{{ bankcard.extra_data }}" data-init-vector="{{ bankcard.init_vector }}" data-status="{{ bankcard.status }}">
+                                                    <button class="btn link-dark zoom border-0 btn-edit-address" type="button" data-bs-toggle="modal" data-bs-target="#modal-edit-address" data-id="{{ address.id }}" data-title="{{ address.title }}" data-country="{{ address.country }}" data-region="{{ address.region }}" data-locality="{{ address.locality }}" data-street="{{ address.street }}" data-house="{{ address.house }}" data-zip_code="{{ address.zip_code }}" data-extra-data="{{ address.extra_data }}" data-init-vector="{{ address.init_vector }}" data-status="{{ address.status }}">
                                                         <i class="fas fa-expand-alt fs-5"></i>
                                                     </button>
 
-                                                    <button class="btn link-dark zoom border-0 btn-favorite-undo" type="button" onclick="updateBankcardStatus({{ bankcard.id }}, 0)">
+                                                    <button class="btn link-dark zoom border-0 btn-favorite-undo" type="button" onclick="updateAddressStatus({{ address.id }}, 0)">
                                                         <i class="far fa-star fs-5"></i>
                                                     </button>
 
-                                                    <button class="btn link-dark zoom border-0 btn-trash" type="button" onclick="updateBankcardStatus({{ bankcard.id }}, 2)">
+                                                    <button class="btn link-dark zoom border-0 btn-trash" type="button" onclick="updateAddressStatus({{ address.id }}, 2)">
                                                         <i class="far fa-trash-alt fs-5"></i>
                                                     </button>
                                                 {% else %}
@@ -165,11 +165,11 @@
                                                         <i class="fas fa-expand-alt fs-5"></i>
                                                     </button>
 
-                                                    <button class="btn link-dark zoom border-0 btn-trash-undo" type="button" onclick="updateBankcardStatus({{ bankcard.id }}, 0)">
+                                                    <button class="btn link-dark zoom border-0 btn-trash-undo" type="button" onclick="updateAddressStatus({{ address.id }}, 0)">
                                                         <i class="fas fa-trash-restore fs-5"></i>
                                                     </button>
 
-                                                    <button class="btn link-dark zoom border-0 btn-trash" type="button" onclick="deleteBankcard({{ bankcard.id }})">
+                                                    <button class="btn link-dark zoom border-0 btn-trash" type="button" onclick="deleteAddress({{ address.id }})">
                                                         <i class="far fa-trash-alt fs-5"></i>
                                                     </button>
                                                 {% endif %}
@@ -181,27 +181,27 @@
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-6 align-self-center">
-                                <p id="dataTable_info-1" class="dataTables_info" role="status" aria-live="polite">Показано {{ bankcards.start_index }} до {{ bankcards.end_index }} из {{ bankcards.paginator.count }}</p>
+                                <p id="dataTable_info-1" class="dataTables_info" role="status" aria-live="polite">Показано {{ addresses.start_index }} до {{ addresses.end_index }} из {{ addresses.paginator.count }}</p>
                             </div>
                             <div class="col-md-6">
                                 <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
                                     <ul class="pagination">
-                                        {% if bankcards.has_previous %}
-                                            <li class="page-item"><a class="page-link" href="?page={{ bankcards.previous_page_number }}" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+                                        {% if addresses.has_previous %}
+                                            <li class="page-item"><a class="page-link" href="?page={{ addresses.previous_page_number }}" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
                                         {% else %}
                                             <li class="page-item disabled"><span class="page-link" aria-label="Previous"><span aria-hidden="true">«</span></span></li>
                                         {% endif %}
 
-                                        {% for num in bankcards.paginator.page_range %}
-                                            {% if bankcards.number == num %}
+                                        {% for num in addresses.paginator.page_range %}
+                                            {% if addresses.number == num %}
                                                 <li class="page-item active"><span class="page-link">{{ num }}</span></li>
-                                            {% elif num > bankcards.number|add:'-3' and num < bankcards.number|add:'3' %}
+                                            {% elif num > addresses.number|add:'-3' and num < addresses.number|add:'3' %}
                                                 <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
                                             {% endif %}
                                         {% endfor %}
 
-                                        {% if bankcards.has_next %}
-                                            <li class="page-item"><a class="page-link" href="?page={{ bankcards.next_page_number }}" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+                                        {% if addresses.has_next %}
+                                            <li class="page-item"><a class="page-link" href="?page={{ addresses.next_page_number }}" aria-label="Next"><span aria-hidden="true">»</span></a></li>
                                         {% else %}
                                             <li class="page-item disabled"><span class="page-link" aria-label="Next"><span aria-hidden="true">»</span></span></li>
                                         {% endif %}
@@ -218,71 +218,66 @@
     </div>
     <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
 </div>
-<div class="modal fade" role="dialog" tabindex="-1" id="modal-add-bankcard">
+<div class="modal fade" role="dialog" tabindex="-1" id="modal-add-address">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title text-black" style="font-weight: bold;">Добавление банковской карты</h4>
+                <h4 class="modal-title text-black" style="font-weight: bold;">Добавление адреса</h4>
                 <button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="id_form_add_bankcard" method="post">
+                <form id="id_form_add_address" method="post">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label class="form-label text-dark" for="{{ add_bankcard_form.title.id_for_label }}">{{ add_bankcard_form.title.label_tag }}
+                        <label class="form-label text-dark" for="{{ add_address_form.title.id_for_label }}">{{ add_address_form.title.label_tag }}
                             <span class="text-danger">*</span>
                         </label>
-                        {{ add_bankcard_form.title }}
+                        {{ add_address_form.title }}
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-dark" for="{{ add_bankcard_form.card_number.id_for_label }}">{{ add_bankcard_form.card_number.label_tag }}
+                        <label class="form-label text-dark" for="{{ add_address_form.country.id_for_label }}">{{ add_address_form.country.label_tag }}
                             <span class="text-danger">*</span>
                         </label>
-                        {{ add_bankcard_form.card_number }}
-                        <small class="form-text">Формат: XXXXXXXXXXXXXXXX</small>
+                        {{ add_address_form.country }}
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-dark" for="{{ add_bankcard_form.card_expiration_month.id_for_label }}">{{ add_bankcard_form.card_expiration_month.label_tag }}
+                        <label class="form-label text-dark" for="{{ add_address_form.region.id_for_label }}">{{ add_address_form.region.label_tag }}</label>
+                        {{ add_address_form.region }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-dark" for="{{ add_address_form.locality.id_for_label }}">{{ add_address_form.locality.label_tag }}
                             <span class="text-danger">*</span>
                         </label>
-                        {{ add_bankcard_form.card_expiration_month }}
-                        <small class="form-text">Формат: XX</small>
+                        {{ add_address_form.locality }}
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-dark" for="{{ add_bankcard_form.card_expiration_year.id_for_label }}">{{ add_bankcard_form.card_expiration_year.label_tag }}
+                        <label class="form-label text-dark" for="{{ add_address_form.street.id_for_label }}">{{ add_address_form.street.label_tag }}
                             <span class="text-danger">*</span>
                         </label>
-                        {{ add_bankcard_form.card_expiration_year }}
-                        <small class="form-text">Формат: XXXX</small>
+                        {{ add_address_form.street }}
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-dark" for="{{ add_bankcard_form.card_security_code.id_for_label }}">{{ add_bankcard_form.card_security_code.label_tag }}
+                        <label class="form-label text-dark" for="{{ add_address_form.house.id_for_label }}">{{ add_address_form.house.label_tag }}
                             <span class="text-danger">*</span>
                         </label>
-                        {{ add_bankcard_form.card_security_code }}
-                        <small class="form-text">Формат: XXX или XXXX</small>
+                        {{ add_address_form.house }}
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-dark" for="{{ add_bankcard_form.card_pin.id_for_label }}">{{ add_bankcard_form.card_pin.label_tag }}
+                        <label class="form-label text-dark" for="{{ add_address_form.zip_code.id_for_label }}">{{ add_address_form.zip_code.label_tag }}
                             <span class="text-danger">*</span>
                         </label>
-                        {{ add_bankcard_form.card_pin }}
-                        <small class="form-text">Формат: XXXX</small>
+                        {{ add_address_form.zip_code }}
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-dark" for="{{ add_bankcard_form.cardholder_name.id_for_label }}">{{ add_bankcard_form.cardholder_name.label_tag }}</label>
-                        {{ add_bankcard_form.cardholder_name }}
+                        <label class="form-label text-dark" for="{{ add_address_form.extra_data.id_for_label }}">{{ add_address_form.extra_data.label_tag }}</label>
+                        {{ add_address_form.extra_data }}
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label text-dark" for="{{ add_bankcard_form.extra_data.id_for_label }}">{{ add_bankcard_form.extra_data.label_tag }}</label>
-                        {{ add_bankcard_form.extra_data }}
-                    </div>
-                    {{ add_bankcard_form.init_vector }}
+                    {{ add_address_form.init_vector }}
                     <input type="hidden" name="operation" value="add">
                     <div class="mb-3">
                         <div class="form-check">
-                            {{ add_bankcard_form.favorite }}
-                            <label class="form-check-label text-dark" for="{{ add_bankcard_form.favorite.id_for_label }}">{{ add_bankcard_form.favorite.label_tag }}</label>
+                            {{ add_address_form.favorite }}
+                            <label class="form-check-label text-dark" for="{{ add_address_form.favorite.id_for_label }}">{{ add_address_form.favorite.label_tag }}</label>
                         </div>
                     </div>
                     <hr>
@@ -299,72 +294,67 @@
     </div>
 </div>
 
-<div class="modal fade" role="dialog" tabindex="-1" id="modal-edit-bankcard">
+<div class="modal fade" role="dialog" tabindex="-1" id="modal-edit-address">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title text-black" style="font-weight: bold;">Изменение банковской карты</h4>
+                <h4 class="modal-title text-black" style="font-weight: bold;">Изменение адреса</h4>
                 <button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="id_form_edit_bankcard" method="post">
+                <form id="id_form_edit_address" method="post">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label class="form-label text-dark" for="{{ edit_bankcard_form.title.id_for_label }}">{{ edit_bankcard_form.title.label_tag }}
+                        <label class="form-label text-dark" for="{{ edit_address_form.title.id_for_label }}">{{ edit_address_form.title.label_tag }}
                             <span class="text-danger">*</span>
                         </label>
-                        {{ edit_bankcard_form.title }}
+                        {{ edit_address_form.title }}
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-dark" for="{{ edit_bankcard_form.card_number.id_for_label }}">{{ edit_bankcard_form.card_number.label_tag }}
+                        <label class="form-label text-dark" for="{{ edit_address_form.country.id_for_label }}">{{ edit_address_form.country.label_tag }}
                             <span class="text-danger">*</span>
                         </label>
-                        {{ edit_bankcard_form.card_number }}
-                        <small class="form-text">Формат: XXXXXXXXXXXXXXXX</small>
+                        {{ edit_address_form.country }}
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-dark" for="{{ edit_bankcard_form.card_expiration_month.id_for_label }}">{{ edit_bankcard_form.card_expiration_month.label_tag }}
+                        <label class="form-label text-dark" for="{{ edit_address_form.region.id_for_label }}">{{ edit_address_form.region.label_tag }}</label>
+                        {{ edit_address_form.region }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-dark" for="{{ edit_address_form.locality.id_for_label }}">{{ edit_address_form.locality.label_tag }}
                             <span class="text-danger">*</span>
                         </label>
-                        {{ edit_bankcard_form.card_expiration_month }}
-                        <small class="form-text">Формат: XX</small>
+                        {{ edit_address_form.locality }}
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-dark" for="{{ edit_bankcard_form.card_expiration_year.id_for_label }}">{{ edit_bankcard_form.card_expiration_year.label_tag }}
+                        <label class="form-label text-dark" for="{{ edit_address_form.street.id_for_label }}">{{ edit_address_form.street.label_tag }}
                             <span class="text-danger">*</span>
                         </label>
-                        {{ edit_bankcard_form.card_expiration_year }}
-                        <small class="form-text">Формат: XXXX</small>
+                        {{ edit_address_form.street }}
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-dark" for="{{ edit_bankcard_form.card_security_code.id_for_label }}">{{ edit_bankcard_form.card_security_code.label_tag }}
+                        <label class="form-label text-dark" for="{{ edit_address_form.house.id_for_label }}">{{ edit_address_form.house.label_tag }}
                             <span class="text-danger">*</span>
                         </label>
-                        {{ edit_bankcard_form.card_security_code }}
-                        <small class="form-text">Формат: XXX или XXXX</small>
+                        {{ edit_address_form.house }}
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-dark" for="{{ edit_bankcard_form.card_pin.id_for_label }}">{{ edit_bankcard_form.card_pin.label_tag }}
+                        <label class="form-label text-dark" for="{{ edit_address_form.zip_code.id_for_label }}">{{ edit_address_form.zip_code.label_tag }}
                             <span class="text-danger">*</span>
                         </label>
-                        {{ edit_bankcard_form.card_pin }}
-                        <small class="form-text">Формат: XXXX</small>
+                        {{ edit_address_form.zip_code }}
                     </div>
                     <div class="mb-3">
-                        <label class="form-label text-dark" for="{{ edit_bankcard_form.cardholder_name.id_for_label }}">{{ edit_bankcard_form.cardholder_name.label_tag }}</label>
-                        {{ edit_bankcard_form.cardholder_name }}
+                        <label class="form-label text-dark" for="{{ edit_address_form.extra_data.id_for_label }}">{{ edit_address_form.extra_data.label_tag }}</label>
+                        {{ edit_address_form.extra_data }}
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label text-dark" for="{{ edit_bankcard_form.extra_data.id_for_label }}">{{ edit_bankcard_form.extra_data.label_tag }}</label>
-                        {{ edit_bankcard_form.extra_data }}
-                    </div>
-                    {{ edit_bankcard_form.init_vector }}
+                    {{ edit_address_form.init_vector }}
                     <input type="hidden" name="operation" value="edit">
                     <input type="hidden" name="id">
                     <div class="mb-3">
                         <div class="form-check">
-                            {{ edit_bankcard_form.favorite }}
-                            <label class="form-check-label text-dark" for="{{ edit_bankcard_form.favorite.id_for_label }}">{{ edit_bankcard_form.favorite.label_tag }}</label>
+                            {{ edit_address_form.favorite }}
+                            <label class="form-check-label text-dark" for="{{ edit_address_form.favorite.id_for_label }}">{{ edit_address_form.favorite.label_tag }}</label>
                         </div>
                     </div>
                     <hr>
@@ -388,7 +378,7 @@
 <script src="{% static 'js/handlers/copyToClipboard.js' %}"></script>
 <script src="{% static 'js/valid.js' %}"></script>
 <script src="{% static 'js/encryption.js' %}"></script>
-<script src="{% static 'js/pages/bankcards.js' %}"></script>
+<script src="{% static 'js/pages/addresses.js' %}"></script>
 
 <script>
     document.getElementById('user_email').textContent = getCookie('email');
