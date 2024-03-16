@@ -10,16 +10,14 @@ document.addEventListener('DOMContentLoaded', async (event) => {
 
     await decryptData(encryptionKey);
 
-    setupEditPasswordButtons(encryptionKey);
+    setupEditBankcardButtons(encryptionKey);
     setupCopyTextToClipboard();
-    setupPasswordGeneratorAndStrengthEstimation('id_add_password', 'id_add_password_strength', 'id_add_generate_password');
-    setupPasswordGeneratorAndStrengthEstimation('id_edit_password', 'id_edit_password_strength', 'id_edit_generate_password');
-    setupFormSubmit('id_form_add_password', encryptionKey);
-    setupFormSubmit('id_form_edit_password', encryptionKey);
+    setupFormSubmit('id_form_add_bankcard', encryptionKey);
+    setupFormSubmit('id_form_edit_bankcard', encryptionKey);
 });
 
 async function decryptData(encryptionKey) {
-    const elements = document.querySelectorAll('.record_password');
+    const elements = document.querySelectorAll('.record_bankcard');
     const decryptionPromises = [];
 
     for (const element of elements) {
@@ -50,19 +48,21 @@ async function decryptData(encryptionKey) {
     }
 }
 
-function setupEditPasswordButtons(encryptionKey) {
-    document.querySelectorAll('.btn-edit-password').forEach(button => {
+function setupEditBankcardButtons(encryptionKey) {
+    document.querySelectorAll('.btn-edit-bankcard').forEach(button => {
         button.addEventListener('click', async (e) => {
             const data = {
                 title: e.currentTarget.getAttribute('data-title'),
-                website: e.currentTarget.getAttribute('data-website'),
-                login: e.currentTarget.getAttribute('data-login'),
-                email: e.currentTarget.getAttribute('data-email'),
-                password: e.currentTarget.getAttribute('data-password'),
-                extra_data: e.currentTarget.getAttribute('data-extra-data')
+                card_number: e.currentTarget.getAttribute('data-card-number'),
+                card_expiration_month: e.currentTarget.getAttribute('data-card-expiration-month'),
+                card_expiration_year: e.currentTarget.getAttribute('data-card-expiration-year'),
+                card_security_code: e.currentTarget.getAttribute('data-card-security-code'),
+                card_pin: e.currentTarget.getAttribute('data-card-pin'),
+                cardholder_name: e.currentTarget.getAttribute('data-cardholder-name'),
+                extra_data: e.currentTarget.getAttribute('data-extra-data'),
             };
 
-            const form = document.getElementById('id_form_edit_password');
+            const form = document.getElementById('id_form_edit_bankcard');
 
             const favorite = e.currentTarget.getAttribute('data-status') === '1';
             const initVector = e.currentTarget.getAttribute('data-init-vector');
@@ -90,26 +90,48 @@ function setupFormSubmit(formId, encryptionKey) {
 
         const formData = {
             title: form.title.value,
-            website: form.website.value,
-            login: form.login.value,
-            email: form.email.value,
-            password: form.password.value,
+            card_number: form.card_number.value,
+            card_expiration_month: form.card_expiration_month.value,
+            card_expiration_year: form.card_expiration_year.value,
+            card_security_code: form.card_security_code.value,
+            card_pin: form.card_pin.value,
+            cardholder_name: form.cardholder_name.value,
             extra_data: form.extra_data.value
         };
 
         // Check data
-        if (formData.title.trim().length === 0 || formData.login.trim().length === 0 || formData.password.trim().length === 0) {
+        if (formData.title.trim().length === 0
+            || formData.card_number.trim().length === 0
+            || formData.card_expiration_month.trim().length === 0
+            || formData.card_expiration_year.trim().length === 0
+            || formData.card_security_code.trim().length === 0
+            || formData.card_pin.trim().length === 0) {
             notifyError('Все обязательные поля должны быть заполнены');
             return null;
         }
 
-        if (formData.email.trim().length > 0 && !isEmailValid(formData.email)) {
-            notifyError('Некорректный формат почты');
+        if (formData.card_number.trim().length > 0 && !isCardNumberValid(formData.card_number)) {
+            notifyError('Некорректный номер банковской карты');
             return null;
         }
 
-        if (formData.website.trim().length > 0 && !isURLValid(formData.website)) {
-            notifyError('Некорректный формат адреса веб-сайта, он должен быть полным');
+        if (formData.card_expiration_month.trim().length > 0 && !isMonthValid(formData.card_expiration_month)) {
+            notifyError('Некорректный месяц истечения срока действия карты');
+            return null;
+        }
+
+        if (formData.card_expiration_year.trim().length > 0 && !isYearValid(formData.card_expiration_year)) {
+            notifyError('Некорректный год истечения срока действия карты');
+            return null;
+        }
+
+        if (formData.card_security_code.trim().length > 0 && !isCVCValid(formData.card_security_code)) {
+            notifyError('Некорректный CVC/CVV код');
+            return null;
+        }
+
+        if (formData.card_pin.trim().length > 0 && !isPinValid(formData.card_pin)) {
+            notifyError('Некорректный пин-код карты');
             return null;
         }
 
@@ -118,18 +140,8 @@ function setupFormSubmit(formId, encryptionKey) {
             return null;
         }
 
-        if (formData.website.trim().length > 256) {
-            notifyError('Адрес веб-сайта не должен превышать 256 символов');
-            return null;
-        }
-
-        if (formData.login.trim().length > 128) {
-            notifyError('Логин не должен превышать 128 символов');
-            return null;
-        }
-
-        if (formData.password.trim().length > 128) {
-            notifyError('Пароль не должен превышать 128 символов');
+        if (formData.cardholder_name.trim().length > 128) {
+            notifyError('Имя владельца карты не должно превышать 128 символов');
             return null;
         }
 
@@ -156,8 +168,8 @@ function setupFormSubmit(formId, encryptionKey) {
     });
 }
 
-async function updatePasswordStatus(id, status) {
-    const url = `${window.location.origin}/passwords/api/update/status/`;
+async function updateBankcardStatus(id, status) {
+    const url = `${window.location.origin}/bankcards/api/update/status/`;
     const data = {id: id, status: status};
     const csrftoken = getCookie('csrftoken');
     const errorMessage = 'Не удалось выполнить действие';
@@ -188,8 +200,8 @@ async function updatePasswordStatus(id, status) {
     }
 }
 
-async function deletePassword(id) {
-    const url = `${window.location.origin}/passwords/api/delete/`;
+async function deleteBankcard(id) {
+    const url = `${window.location.origin}/bankcards/api/delete/`;
     const data = {id: id};
     const csrftoken = getCookie('csrftoken');
     const errorMessage = 'Не удалось выполнить действие';

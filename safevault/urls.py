@@ -22,5 +22,6 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', RedirectView.as_view(pattern_name='users:login')),
     path('users/', include('users.urls')),
-    path('passwords/', include('passwords.urls'))
+    path('passwords/', include('passwords.urls')),
+    path('bankcards/', include('bankcards.urls')),
 ]

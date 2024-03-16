@@ -55,7 +55,7 @@ class PasswordsView(View):
             password.save()
             return self.handle_request(request, notification={'func': 'notifySuccess', 'text': notification_text})
         else:
-            notification = {'func': 'notifyError', 'text': 'Произошла ошибка. Убедитесь, что все поля корректно заполнены'} if form else None
+            notification = {'func': 'notifyError', 'text': 'Убедитесь, что все поля корректно заполнены'} if form else None
             return self.handle_request(request, notification=notification)
 
     def handle_request(self, request, **kwargs):

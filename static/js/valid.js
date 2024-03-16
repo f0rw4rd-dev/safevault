@@ -16,6 +16,10 @@ function isCVCValid(cvc) {
     return /^\d{3,4}$/.test(cvc);
 }
 
+function isPinValid(pin) {
+    return /^\d{4}$/.test(pin);
+}
+
 function isMonthValid(month) {
     return /^(0[1-9]|1[0-2])$/.test(month);
 }
