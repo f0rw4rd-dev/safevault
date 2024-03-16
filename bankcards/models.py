@@ -9,7 +9,12 @@ class Bankcard(models.Model):
     card_expiration_month = models.CharField(max_length=20)
     card_expiration_year = models.CharField(max_length=40)
     card_security_code = models.CharField(max_length=30)
+    card_pin = models.CharField(max_length=40)
     cardholder_name = models.CharField(max_length=1280, blank=True, null=True)
     extra_data = models.CharField(max_length=40960, blank=True, null=True)
+    init_vector = models.CharField(max_length=160)
     status = models.PositiveIntegerField(default=0)
     change_status_time = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.title
