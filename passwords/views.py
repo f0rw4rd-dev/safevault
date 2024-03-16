@@ -16,7 +16,7 @@ class PasswordsView(View):
 
     @check_if_user_is_not_authorized
     def get(self, request, *args, **kwargs):
-        return self.handle_request(request, new_form=True)
+        return self.handle_request(request)
 
     @check_if_user_is_not_authorized
     def post(self, request, *args, **kwargs):
