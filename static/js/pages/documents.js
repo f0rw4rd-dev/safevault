@@ -10,14 +10,14 @@ document.addEventListener('DOMContentLoaded', async (event) => {
 
     await decryptData(encryptionKey);
 
-    setupEditAddressButtons(encryptionKey);
+    setupEditDocumentButtons(encryptionKey);
     setupCopyTextToClipboard();
-    setupFormSubmit('id_form_add_address', encryptionKey);
-    setupFormSubmit('id_form_edit_address', encryptionKey);
+    setupFormSubmit('id_form_add_document', encryptionKey);
+    setupFormSubmit('id_form_edit_document', encryptionKey);
 });
 
 async function decryptData(encryptionKey) {
-    const elements = document.querySelectorAll('.record_address');
+    const elements = document.querySelectorAll('.record_document');
     const decryptionPromises = [];
 
     for (const element of elements) {
@@ -48,21 +48,19 @@ async function decryptData(encryptionKey) {
     }
 }
 
-function setupEditAddressButtons(encryptionKey) {
-    document.querySelectorAll('.btn-edit-address').forEach(button => {
+function setupEditDocumentButtons(encryptionKey) {
+    document.querySelectorAll('.btn-edit-document').forEach(button => {
         button.addEventListener('click', async (e) => {
             const data = {
                 title: e.currentTarget.getAttribute('data-title'),
-                country: e.currentTarget.getAttribute('data-country'),
-                region: e.currentTarget.getAttribute('data-region'),
-                locality: e.currentTarget.getAttribute('data-locality'),
-                street: e.currentTarget.getAttribute('data-street'),
-                house: e.currentTarget.getAttribute('data-house'),
-                zip_code: e.currentTarget.getAttribute('data-zip-code'),
+                document_number: e.currentTarget.getAttribute('data-document-number'),
+                issuing_authority: e.currentTarget.getAttribute('data-issuing-authority'),
+                issue_date_custom: e.currentTarget.getAttribute('data-issue-date'),
+                expiration_date_custom: e.currentTarget.getAttribute('data-expiration-date'),
                 extra_data: e.currentTarget.getAttribute('data-extra-data'),
             };
 
-            const form = document.getElementById('id_form_edit_address');
+            const form = document.getElementById('id_form_edit_document');
 
             const favorite = e.currentTarget.getAttribute('data-status') === '1';
             const initVector = e.currentTarget.getAttribute('data-init-vector');
@@ -70,6 +68,7 @@ function setupEditAddressButtons(encryptionKey) {
 
             for (const key of Object.keys(data)) {
                 if (form.elements[key]) {
+                    console.log(data[key]);
                     form.elements[key].value = await decryptAES(hexToArrayBuffer(encryptionKey), hexToArrayBuffer(data[key]), hexToArrayBuffer(initVector));
                 }
             }
@@ -90,22 +89,16 @@ function setupFormSubmit(formId, encryptionKey) {
 
         const formData = {
             title: form.title.value,
-            country: form.country.value,
-            region: form.region.value,
-            locality: form.locality.value,
-            street: form.street.value,
-            house: form.house.value,
-            zip_code: form.zip_code.value,
+            document_number: form.document_number.value,
+            issuing_authority: form.issuing_authority.value,
+            issue_date: form.issue_date_custom.value,
+            expiration_date: form.expiration_date_custom.value,
             extra_data: form.extra_data.value
         };
 
         // Check data
         if (formData.title.trim().length === 0
-            || formData.country.trim().length === 0
-            || formData.locality.trim().length === 0
-            || formData.street.trim().length === 0
-            || formData.house.trim().length === 0
-            || formData.zip_code.trim().length === 0) {
+            || formData.document_number.trim().length === 0) {
             notifyError('Все обязательные поля должны быть заполнены');
             return null;
         }
@@ -115,38 +108,13 @@ function setupFormSubmit(formId, encryptionKey) {
             return null;
         }
 
-        if (formData.country.trim().length > 128) {
-            notifyError('Название страны не должно превышать 128 символов');
-            return null;
-        }
-
-        if (formData.region.trim().length > 128) {
-            notifyError('Название региона не должно превышать 128 символов');
-            return null;
-        }
-
-        if (formData.locality.trim().length > 128) {
-            notifyError('Название населенного пункта не должно превышать 128 символов');
-            return null;
-        }
-
-        if (formData.street.trim().length > 128) {
-            notifyError('Название улицы не должно превышать 128 символов');
-            return null;
-        }
-
-        if (formData.house.trim().length > 16) {
-            notifyError('Номер дома не должен превышать 16 символов');
-            return null;
-        }
-
-        if (formData.zip_code.trim().length > 16) {
-            notifyError('Индекс не должен превышать 16 символов');
+        if (formData.document_number.trim().length > 32) {
+            notifyError('Номер документа не должен превышать 32 символа');
             return null;
         }
 
         if (formData.extra_data.trim().length > 4096) {
-            notifyError('Дополнительные данные не должны превышать 4096 символов');
+            notifyError('Содержимое не должно превышать 4096 символов');
             return null;
         }
 
@@ -168,8 +136,8 @@ function setupFormSubmit(formId, encryptionKey) {
     });
 }
 
-async function updateAddressStatus(id, status) {
-    const url = `${window.location.origin}/addresses/api/update/status/`;
+async function updateDocumentStatus(id, status) {
+    const url = `${window.location.origin}/documents/api/update/status/`;
     const data = {id: id, status: status};
     const csrftoken = getCookie('csrftoken');
     const errorMessage = 'Не удалось выполнить действие';
@@ -200,8 +168,8 @@ async function updateAddressStatus(id, status) {
     }
 }
 
-async function deleteAddress(id) {
-    const url = `${window.location.origin}/addresses/api/delete/`;
+async function deleteDocument(id) {
+    const url = `${window.location.origin}/documents/api/delete/`;
     const data = {id: id};
     const csrftoken = getCookie('csrftoken');
     const errorMessage = 'Не удалось выполнить действие';

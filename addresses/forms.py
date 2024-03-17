@@ -14,6 +14,11 @@ class CheckboxInput(forms.CheckboxInput):
         super().__init__(attrs={'class': 'form-check-input form-check-input-dark', **(attrs or {})})
 
 
+class Textarea(forms.Textarea):
+    def __init__(self, attrs=None):
+        super().__init__(attrs={'class': 'form-control', **(attrs or {})})
+
+
 class AddressMeta:
     @staticmethod
     def get_model():
@@ -33,7 +38,7 @@ class AddressMeta:
             'street': TextInput(attrs={'id': f'id_{prefix}_street'}),
             'house': TextInput(attrs={'id': f'id_{prefix}_house'}),
             'zip_code': TextInput(attrs={'id': f'id_{prefix}_zip_code'}),
-            'extra_data': TextInput(attrs={'id': f'id_{prefix}_extra_data'}),
+            'extra_data': Textarea(attrs={'id': f'id_{prefix}_extra_data', 'rows': 3}),
             'init_vector': forms.HiddenInput(attrs={'id': f'id_{prefix}_init_vector'})
         }
 

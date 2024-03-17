@@ -86,12 +86,12 @@
                                                 <div class="input-group input-group-sm">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text" id="inputGroup-sizing-sm">
-                                                            <i class="far fa-credit-card text-dark"></i>
+                                                            <i class="fas fa-flag text-dark"></i>
                                                         </span>
                                                     </div>
                                                     <input class="form-control record_address" type="text" readonly="" value="{{ address.country }}" data-init-vector="{{ address.init_vector }}" style="color: var(--bs-dark);">
                                                     <button class="btn btn-dark btn-copy" type="button">
-                                                        <i class="fas fa-flag"></i>
+                                                        <i class="far fa-copy"></i>
                                                     </button>
                                                 </div>
                                                 <div class="input-group input-group-sm mt-2">
@@ -131,7 +131,7 @@
                                             <hr>
                                             <div class="btn-group" role="group">
                                                 {% if status == '0' %}
-                                                    <button class="btn link-dark zoom border-0 btn-edit-address" type="button" data-bs-toggle="modal" data-bs-target="#modal-edit-address" data-id="{{ address.id }}" data-title="{{ address.title }}" data-country="{{ address.country }}" data-region="{{ address.region }}" data-locality="{{ address.locality }}" data-street="{{ address.street }}" data-house="{{ address.house }}" data-zip_code="{{ address.zip_code }}" data-extra-data="{{ address.extra_data }}" data-init-vector="{{ address.init_vector }}" data-status="{{ address.status }}">
+                                                    <button class="btn link-dark zoom border-0 btn-edit-address" type="button" data-bs-toggle="modal" data-bs-target="#modal-edit-address" data-id="{{ address.id }}" data-title="{{ address.title }}" data-country="{{ address.country }}" data-region="{{ address.region }}" data-locality="{{ address.locality }}" data-street="{{ address.street }}" data-house="{{ address.house }}" data-zip-code="{{ address.zip_code }}" data-extra-data="{{ address.extra_data }}" data-init-vector="{{ address.init_vector }}" data-status="{{ address.status }}">
                                                         <i class="fas fa-expand-alt fs-5"></i>
                                                     </button>
 
@@ -149,7 +149,7 @@
                                                         <i class="far fa-trash-alt fs-5"></i>
                                                     </button>
                                                 {% elif status == '1' %}
-                                                    <button class="btn link-dark zoom border-0 btn-edit-address" type="button" data-bs-toggle="modal" data-bs-target="#modal-edit-address" data-id="{{ address.id }}" data-title="{{ address.title }}" data-country="{{ address.country }}" data-region="{{ address.region }}" data-locality="{{ address.locality }}" data-street="{{ address.street }}" data-house="{{ address.house }}" data-zip_code="{{ address.zip_code }}" data-extra-data="{{ address.extra_data }}" data-init-vector="{{ address.init_vector }}" data-status="{{ address.status }}">
+                                                    <button class="btn link-dark zoom border-0 btn-edit-address" type="button" data-bs-toggle="modal" data-bs-target="#modal-edit-address" data-id="{{ address.id }}" data-title="{{ address.title }}" data-country="{{ address.country }}" data-region="{{ address.region }}" data-locality="{{ address.locality }}" data-street="{{ address.street }}" data-house="{{ address.house }}" data-zip-code="{{ address.zip_code }}" data-extra-data="{{ address.extra_data }}" data-init-vector="{{ address.init_vector }}" data-status="{{ address.status }}">
                                                         <i class="fas fa-expand-alt fs-5"></i>
                                                     </button>
 

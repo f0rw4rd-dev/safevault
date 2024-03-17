@@ -14,6 +14,11 @@ class CheckboxInput(forms.CheckboxInput):
         super().__init__(attrs={'class': 'form-check-input form-check-input-dark', **(attrs or {})})
 
 
+class Textarea(forms.Textarea):
+    def __init__(self, attrs=None):
+        super().__init__(attrs={'class': 'form-control', **(attrs or {})})
+
+
 class PasswordMeta:
     @staticmethod
     def get_model():
@@ -31,7 +36,7 @@ class PasswordMeta:
             'login': TextInput(attrs={'id': f'id_{prefix}_login'}),
             'email': TextInput(attrs={'id': f'id_{prefix}_email'}),
             'password': TextInput(attrs={'id': f'id_{prefix}_password'}),
-            'extra_data': TextInput(attrs={'id': f'id_{prefix}_extra_data'}),
+            'extra_data': Textarea(attrs={'id': f'id_{prefix}_extra_data', 'rows': 3}),
             'init_vector': forms.HiddenInput(attrs={'id': f'id_{prefix}_init_vector'})
         }
 

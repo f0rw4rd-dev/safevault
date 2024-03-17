@@ -1,0 +1,94 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <title>SafeVault | Генератор паролей</title>
+
+    {% include 'head.html' %}
+</head>
+
+<body id="page-top">
+<div id="wrapper">
+    {% include 'sidebar.html' %}
+
+    <div class="d-flex flex-column" id="content-wrapper">
+        <div id="content">
+            {% include 'navbar.html' %}
+
+            <div class="container-fluid py-2 py-xl-2">
+                <div class="card border rounded mb-3">
+                    <div class="card-header py-3">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-auto col-lg-auto col-xl-auto col-xxl-auto col-auto">
+                                <h2 class="text-dark mb-0" style="font-weight: bold;">Генерирование паролей</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-4 row-cols-xxl-5 p-2">
+                            <form>
+                                <div class="mb-3">
+                                    <label for="id_range" class="form-label">Длина пароля (текущее: <span id="id_range_value"></span>)</label>
+                                    <input type="range" class="form-range form-range-dark" min="4" max="256" value="16" id="id_range">
+                                    <div class="d-flex justify-content-between">
+                                        <span>4</span>
+                                        <span>256</span>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <input class="form-check-input form-check-input-dark" type="checkbox" value="" id="id_use_digits" checked>
+                                    <label class="form-check-label text-dark" for="id_use_digits">Использовать цифры</label>
+                                </div>
+                                <div class="mb-3">
+                                    <input class="form-check-input form-check-input-dark" type="checkbox" value="" id="id_use_capital_letters" checked>
+                                    <label class="form-check-label text-dark" for="id_use_capital_letters">Использовать заглавные буквы</label>
+                                </div>
+                                <div class="mb-3">
+                                    <input class="form-check-input form-check-input-dark" type="checkbox" value="" id="id_use_symbols" checked>
+                                    <label class="form-check-label text-dark" for="id_use_symbols">Использовать символы</label>
+                                </div>
+                                <hr>
+                                <div class="mb-3">
+                                    <label class="form-label text-dark" for="id_password">Сгенерированный пароль</label>
+                                    <input class="form-control" type="text" id="id_password" readonly>
+                                    <small class="form-text" id="id_password_strength"></small>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% include 'footer.html' %}
+    </div>
+    <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+</div>
+
+{% include 'scripts.html' %}
+
+<script src="{% static 'libraries/argon2-browser/dist/argon2-bundled.min.js' %}"></script>
+<script src="{% static 'js/users.js' %}"></script>
+<script src="{% static 'js/handlers/copyToClipboard.js' %}"></script>
+<script src="{% static 'js/valid.js' %}"></script>
+<script src="{% static 'js/passwords.js' %}"></script>
+<script src="{% static 'js/handlers/passwords.js' %}"></script>
+<script src="{% static 'js/encryption.js' %}"></script>
+<script src="{% static 'js/pages/generator.js' %}"></script>
+
+<script>
+    document.getElementById('user_email').textContent = getCookie('email');
+</script>
+
+{% if notification %}
+    {% if notification.redirectUrl %}
+        <script>{{ notification.func }}("{{ notification.text }}", "{{ notification.redirectUrl }}")</script>
+    {% else %}
+        <script>{{ notification.func }}("{{ notification.text }}")</script>
+    {% endif %}
+{% endif %}
+</body>
+
+</html>

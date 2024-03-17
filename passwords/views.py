@@ -140,3 +140,11 @@ class DeletePasswordView(View):
         password.delete()
 
         return JsonResponse({'status': 'ok'})
+
+
+class GeneratorView(View):
+    template_name = 'passwords/generator.html'
+
+    @check_if_user_is_not_authorized
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {})
