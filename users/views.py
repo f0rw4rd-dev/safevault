@@ -1,9 +1,16 @@
 from django.shortcuts import render, redirect, reverse
 from django.http import JsonResponse
+from django.utils import timezone
 from django.views.generic import View
 from .models import User
 from .forms import LoginForm, RegisterForm
 from .decorators import check_if_user_is_authorized, check_if_user_is_not_authorized
+from io import BytesIO
+
+import pyotp
+import qrcode
+import base64
+import re
 
 
 class LoginView(View):
@@ -24,13 +31,67 @@ class LoginView(View):
 
             user = User.objects.filter(email=email, auth_key=auth_key).first()
 
+            def ban_if_no_more_attempts(email):
+                try:
+                    user = User.objects.get(email=email)
+
+                    if user.auth_attempts == 1:
+                        user.auth_lock_end_time = timezone.now() + timezone.timedelta(minutes=30)
+
+                    if user.auth_attempts >= 1:
+                        user.auth_attempts -= 1
+
+                    user.auth_last_attempt_time = timezone.now()
+                    user.save()
+                except User.DoesNotExist:
+                    pass
+
+            def reset_attempts(user):
+                user.auth_attempts = 3
+                user.save()
+
             if user:
+                if not user.is_active:
+                    notification_text = 'Пользователь заблокирован'
+                    return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifyError', 'text': notification_text}})
+
+                if timezone.now() - user.auth_last_attempt_time > timezone.timedelta(minutes=30) or timezone.now() > user.auth_lock_end_time and user.auth_attempts == 0:
+                    reset_attempts(user)
+
+                if timezone.now() < user.auth_lock_end_time:
+                    notification_text = 'Превышено количество попыток авторизации, подождите окончания блокировки'
+                    return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifyError', 'text': notification_text}})
+
+                if user.tfa_key is not None:
+                    tfa_code = request.POST.get('tfa_code')
+
+                    if not tfa_code:
+                        notification_text = 'Введите код для двухфакторной аутентификации'
+                        return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifyError', 'text': notification_text}})
+
+                    if not pyotp.TOTP(user.tfa_key).verify(tfa_code):
+                        ban_if_no_more_attempts(email)
+                        notification_text = 'Введен неверный код'
+                        return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifyError', 'text': notification_text}})
+
+                request.session.set_expiry(user.session_duration * 60)
                 request.session['user_id'] = user.id
 
                 notification_text = 'Вы успешно авторизованы'
                 notification_redirect_url = f'{request.scheme}://{request.get_host()}{reverse('passwords:passwords')}'
                 return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifySuccess', 'text': notification_text, 'redirectUrl': notification_redirect_url}})
 
+            try:
+                user = User.objects.get(email=email)
+
+                if timezone.now() < user.auth_lock_end_time:
+                    notification_text = 'Превышено количество попыток авторизации, подождите окончания блокировки'
+                    return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifyError', 'text': notification_text}})
+            except User.DoesNotExist:
+                notification_text = 'Введены некорректные данные'
+                return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifyError', 'text': notification_text}})
+
+            ban_if_no_more_attempts(email)
             notification_text = 'Введены некорректные данные'
             return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifyError', 'text': notification_text}})
 
@@ -102,3 +163,77 @@ class UserAPIView(View):
             return JsonResponse({'email': user.email, 'salt': user.salt, 'init_vector': user.init_vector})
         except User.DoesNotExist:
             return JsonResponse({'error': 'Пользователь не найден'}, status=404)
+
+
+class SettingsView(View):
+    template_name = 'users/settings.html'
+
+    @check_if_user_is_not_authorized
+    def get(self, request, *args, **kwargs):
+        return self.handle_request(request)
+
+    @check_if_user_is_not_authorized
+    def post(self, request, *args, **kwargs):
+        user = User.objects.get(id=request.session['user_id'])
+        operation = request.POST.get('operation')
+
+        if operation == 'turn_on_tfa':
+            tfa_code = request.POST.get('tfa_code')
+            code = request.POST.get('code')
+
+            if self.is_six_digits(code) and pyotp.TOTP(tfa_code).verify(code):
+                user.tfa_key = tfa_code
+                user.save()
+
+                notification_text = 'Двухфакторная аутентификация успешно подключена'
+                return self.handle_request(request, notification={'func': 'notifySuccess', 'text': notification_text})
+            else:
+                notification_text = 'Введен неверный код'
+                return self.handle_request(request, notification={'func': 'notifyError', 'text': notification_text})
+        elif operation == 'turn_off_tfa':
+            code = str(request.POST.get('code', ''))
+
+            if self.is_six_digits(code) and pyotp.TOTP(user.tfa_key).verify(code):
+                user.tfa_key = None
+                user.save()
+
+                notification_text = 'Двухфакторная аутентификация успешно отключена'
+                return self.handle_request(request, notification={'func': 'notifySuccess', 'text': notification_text})
+            else:
+                notification_text = 'Введен неверный код'
+                return self.handle_request(request, notification={'func': 'notifyError', 'text': notification_text})
+        elif operation == 'change_session_duration':
+            session_duration = request.POST.get('session_duration')
+
+            if session_duration.isdigit() and 5 <= int(session_duration) <= 120:
+                user.session_duration = int(session_duration)
+                user.save()
+
+                notification_text = 'Время сессии успешно изменено'
+                return self.handle_request(request, notification={'func': 'notifySuccess', 'text': notification_text})
+            else:
+                notification_text = 'Выберите корректное значение'
+                return self.handle_request(request, notification={'func': 'notifyError', 'text': notification_text})
+
+        return redirect(reverse('users:settings'))
+
+    def handle_request(self, request, **kwargs):
+        user = User.objects.get(id=request.session['user_id'])
+        context = {'user': user, 'notification': kwargs.get('notification')}
+
+        if user.tfa_key is None:
+            secret_key = pyotp.random_base32()
+            uri = pyotp.totp.TOTP(secret_key).provisioning_uri(name=user.email, issuer_name='SafeVault')
+
+            img = qrcode.make(uri)
+            img_io = BytesIO()
+            img.save(img_io, format='PNG')
+            img_io.seek(0)
+
+            tfa_qrcode = base64.b64encode(img_io.getvalue()).decode()
+            context.update({'tfa_qrcode': tfa_qrcode, 'tfa_key': secret_key})
+
+        return render(request, self.template_name, context)
+
+    def is_six_digits(self, s):
+        return bool(re.match(r'^\d{6}$', s))

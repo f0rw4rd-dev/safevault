@@ -22,40 +22,49 @@
                     <div class="card-header py-3">
                         <div class="row">
                             <div class="col-12 col-sm-12 col-md-auto col-lg-auto col-xl-auto col-xxl-auto col-auto">
-                                <h2 class="text-dark mb-0" style="font-weight: bold;">Генерирование паролей</h2>
+                                <h2 class="text-dark mb-0" style="font-weight: bold;">Пароли</h2>
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-4 row-cols-xxl-5 p-2">
-                            <form>
-                                <div class="mb-3">
-                                    <label for="id_range" class="form-label">Длина пароля (текущее: <span id="id_range_value"></span>)</label>
-                                    <input type="range" class="form-range form-range-dark" min="4" max="256" value="16" id="id_range">
-                                    <div class="d-flex justify-content-between">
-                                        <span>4</span>
-                                        <span>256</span>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="card mb-3">
+                                    <div class="card-header py-3">
+                                        <p class="text-dark m-0 fw-bold">Генератор паролей</p>
+                                    </div>
+                                    <div class="card-body">
+                                        <form>
+                                            <div class="mb-3">
+                                                <label for="id_range" class="form-label">Длина пароля (текущее: <span id="id_range_value"></span>)</label>
+                                                <input type="range" class="form-range form-range-dark" min="4" max="256" value="16" id="id_range">
+                                                <div class="d-flex justify-content-between">
+                                                    <span>4</span>
+                                                    <span>256</span>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <input class="form-check-input form-check-input-dark" type="checkbox" value="" id="id_use_digits" checked>
+                                                <label class="form-check-label text-dark" for="id_use_digits">Использовать цифры</label>
+                                            </div>
+                                            <div class="mb-3">
+                                                <input class="form-check-input form-check-input-dark" type="checkbox" value="" id="id_use_capital_letters" checked>
+                                                <label class="form-check-label text-dark" for="id_use_capital_letters">Использовать заглавные буквы</label>
+                                            </div>
+                                            <div class="mb-3">
+                                                <input class="form-check-input form-check-input-dark" type="checkbox" value="" id="id_use_symbols" checked>
+                                                <label class="form-check-label text-dark" for="id_use_symbols">Использовать символы</label>
+                                            </div>
+                                            <hr>
+                                            <div class="mb-3">
+                                                <label class="form-label text-dark" for="id_password">Сгенерированный пароль</label>
+                                                <input class="form-control" type="text" id="id_password" readonly>
+                                                <small class="form-text" id="id_password_strength"></small>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
-                                <div class="mb-3">
-                                    <input class="form-check-input form-check-input-dark" type="checkbox" value="" id="id_use_digits" checked>
-                                    <label class="form-check-label text-dark" for="id_use_digits">Использовать цифры</label>
-                                </div>
-                                <div class="mb-3">
-                                    <input class="form-check-input form-check-input-dark" type="checkbox" value="" id="id_use_capital_letters" checked>
-                                    <label class="form-check-label text-dark" for="id_use_capital_letters">Использовать заглавные буквы</label>
-                                </div>
-                                <div class="mb-3">
-                                    <input class="form-check-input form-check-input-dark" type="checkbox" value="" id="id_use_symbols" checked>
-                                    <label class="form-check-label text-dark" for="id_use_symbols">Использовать символы</label>
-                                </div>
-                                <hr>
-                                <div class="mb-3">
-                                    <label class="form-label text-dark" for="id_password">Сгенерированный пароль</label>
-                                    <input class="form-control" type="text" id="id_password" readonly>
-                                    <small class="form-text" id="id_password_strength"></small>
-                                </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>

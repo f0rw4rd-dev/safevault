@@ -57,18 +57,27 @@
                             </div>
                             <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl col-xxl d-flex justify-content-start justify-content-sm-start justify-content-md-start justify-content-lg-start justify-content-xl-end justify-content-xxl-end me-0">
                                 <div>
+                                    {#                                    {% if status == '2' %}#}
+                                    {#                                        <a class="btn btn-dark btn-sm my-1 ms-0 me-2 me-sm-1 disabled" role="button" href="#">#}
+                                    {#                                            <i class="fas fa-plus fa-sm text-white-50"></i>&nbsp; Добавить#}
+                                    {#                                        </a>#}
+                                    {#                                    {% else %}#}
+                                    {#                                        <a class="btn btn-dark btn-sm my-1 ms-0 me-2 me-sm-1" role="button" href="#" data-bs-toggle="modal" data-bs-target="#modal-add-note">#}
+                                    {#                                            <i class="fas fa-plus fa-sm text-white-50"></i>&nbsp; Добавить#}
+                                    {#                                        </a>#}
+                                    {#                                    {% endif %}#}
+                                    {#                                    <a class="btn btn-dark btn-sm my-1 mx-0 ms-sm-1" role="button" href="#">#}
+                                    {#                                        <i class="fas fa-file-export fa-sm text-white-50"></i>&nbsp; Экспорт#}
+                                    {#                                    </a>#}
                                     {% if status == '2' %}
-                                        <a class="btn btn-dark btn-sm my-1 ms-0 me-2 me-sm-1 disabled" role="button" href="#">
+                                        <a class="btn btn-dark btn-sm my-1 ms-0 disabled" role="button" href="#">
                                             <i class="fas fa-plus fa-sm text-white-50"></i>&nbsp; Добавить
                                         </a>
                                     {% else %}
-                                        <a class="btn btn-dark btn-sm my-1 ms-0 me-2 me-sm-1" role="button" href="#" data-bs-toggle="modal" data-bs-target="#modal-add-note">
+                                        <a class="btn btn-dark btn-sm my-1 ms-0" role="button" href="#" data-bs-toggle="modal" data-bs-target="#modal-add-note">
                                             <i class="fas fa-plus fa-sm text-white-50"></i>&nbsp; Добавить
                                         </a>
                                     {% endif %}
-                                    <a class="btn btn-dark btn-sm my-1 mx-0 ms-sm-1" role="button" href="#">
-                                        <i class="fas fa-file-export fa-sm text-white-50"></i>&nbsp; Экспорт
-                                    </a>
                                 </div>
                             </div>
                         </div>
