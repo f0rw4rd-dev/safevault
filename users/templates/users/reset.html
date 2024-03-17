@@ -25,10 +25,11 @@
                                     <h4 class="text-dark mb-4 fs-3" style="font-weight: bold;">SAFE VAULT</h4>
                                     <p class="lead fs-5">Восстановление доступа</p>
                                 </div>
-                                <form id="formReset" name="formReset">
+                                <form method="post">
+                                    {% csrf_token %}
                                     <div class="mb-3">
-                                        <label class="form-label" for="formReset_email">Адрес электронной почты</label>
-                                        <input class="form-control fs-6 py-2" type="email" id="formReset_email" aria-describedby="emailHelp" name="formReset[email]" required="" maxlength="128">
+                                        <label class="form-label" for="{{ reset_form.email.id_for_label }}">{{ reset_form.email.label_tag }}</label>
+                                        {{ reset_form.email }}
                                     </div>
                                     <div class="mb-3">
                                         <p class="text-danger fs-6">В случае изменения мастер-пароля все данные в хранилище будут <strong>удалены</strong>!<br><br>На почту будет отправлено письмо с ссылкой, по которой необходимо перейти для установления нового мастер-пароля и очистки хранилища.</p>
@@ -52,6 +53,14 @@
 </div>
 
 {% include 'scripts.html' %}
+
+{% if notification %}
+    {% if notification.redirectUrl %}
+        <script>{{ notification.func }}("{{ notification.text }}", "{{ notification.redirectUrl }}")</script>
+    {% else %}
+        <script>{{ notification.func }}("{{ notification.text }}")</script>
+    {% endif %}
+{% endif %}
 </body>
 
 </html>

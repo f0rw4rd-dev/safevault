@@ -51,3 +51,33 @@ class RegisterForm(forms.Form):
         user.save()
 
         return user
+
+
+class ResetForm(forms.Form):
+    email = forms.EmailField(label="Адрес электронной почты", min_length=6, max_length=128, required=True, widget=EmailInput())
+
+
+class ResetConfirmForm(forms.Form):
+    email = forms.EmailField(label="Адрес электронной почты", min_length=6, max_length=128, required=True, widget=EmailInput())
+    master_password = forms.CharField(label="Мастер-пароль", min_length=8, max_length=128, required=True, widget=PasswordInput())
+    auth_key = forms.CharField(required=True, widget=forms.HiddenInput())
+    salt = forms.CharField(required=True, widget=forms.HiddenInput())
+    init_vector = forms.CharField(required=True, widget=forms.HiddenInput())
+
+    # def save(self):
+    #     email = self.cleaned_data['email']
+    #     auth_key = self.cleaned_data['auth_key']
+    #     salt = self.cleaned_data['salt']
+    #     init_vector = self.cleaned_data['init_vector']
+    #
+    #     user = User(
+    #         email=email,
+    #         auth_key=auth_key,
+    #         salt=salt,
+    #         init_vector=init_vector,
+    #         is_active=True
+    #     )
+    #
+    #     user.save()
+    #
+    #     return user

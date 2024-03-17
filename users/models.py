@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, AbstractUser
+from django.utils import timezone
+
 from .managers import UserManager
 
 import datetime
@@ -25,3 +27,13 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+
+
+def default_reset_end_time():
+    return timezone.now() + datetime.timedelta(hours=1)
+
+
+class ResetPassword(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    reset_key = models.CharField(max_length=64, blank=False, null=False)
+    reset_end_time = models.DateTimeField(default=default_reset_end_time, blank=False, null=False)

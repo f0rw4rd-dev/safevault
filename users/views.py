@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect, reverse
 from django.http import JsonResponse
 from django.utils import timezone
 from django.views.generic import View
+from django.core.mail import send_mail
 from .models import User
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm, ResetForm
 from .decorators import check_if_user_is_authorized, check_if_user_is_not_authorized
 from io import BytesIO
 
@@ -11,6 +12,7 @@ import pyotp
 import qrcode
 import base64
 import re
+import secrets
 
 
 class LoginView(View):
@@ -133,11 +135,43 @@ class ResetView(View):
 
     @check_if_user_is_authorized
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {})
+        return render(request, self.template_name, {'reset_form': ResetForm()})
+
+    @check_if_user_is_authorized
+    def post(self, request, *args, **kwargs):
+        form = ResetForm(request.POST)
+
+        if form.is_valid():
+            email = form.cleaned_data['email']
+
+            try:
+                user = User.objects.get(email=email)
+                user.resetpassword_set.all().delete()
+
+                reset_key = secrets.token_hex(64)
+                reset_password = user.resetpassword_set.create(reset_key=reset_key)
+                reset_link = request.build_absolute_uri(reverse('users:reset-confirm', args=[reset_key]))
+
+                send_mail(
+                    'Сброс пароля',
+                    f'Перейдите по ссылке для сброса пароля: {reset_link}',
+                    'admin@example.com',
+                    [email],
+                    fail_silently=False,
+                )
+
+                notification_text = 'На ваш адрес электронной почты отправлено письмо с инструкциями по сбросу пароля'
+                return render(request, self.template_name, {'reset_form': ResetForm(), 'notification': {'func': 'notifySuccess', 'text': notification_text}})
+            except User.DoesNotExist:
+                notification_text = 'Пользователь с данным адресом электронной почты не найден'
+                return render(request, self.template_name, {'reset_form': ResetForm(), 'notification': {'func': 'notifyError', 'text': notification_text}})
+
+        notification_text = 'Введены некорректные данные'
+        return render(request, self.template_name, {'reset_form': ResetForm(), 'notification': {'func': 'notifyError', 'text': notification_text}})
 
 
-class Reset2View(View):
-    template_name = 'users/reset-2.html'
+class ResetConfirmView(View):
+    template_name = 'users/reset-confirm.html'
 
     @check_if_user_is_authorized
     def get(self, request, *args, **kwargs):

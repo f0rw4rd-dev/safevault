@@ -67,7 +67,15 @@
 <script src="{% static 'libraries/argon2-browser/lib/argon2.js' %}"></script>
 <script src="{% static 'js/passwords.js' %}"></script>
 <script src="{% static 'js/handlers/passwords.js' %}"></script>
-<script src="{% static 'js/pages/reset-2.js' %}"></script>
+<script src="{% static 'js/pages/resetConfirm.js' %}"></script>
+
+{% if notification %}
+    {% if notification.redirectUrl %}
+        <script>{{ notification.func }}("{{ notification.text }}", "{{ notification.redirectUrl }}")</script>
+    {% else %}
+        <script>{{ notification.func }}("{{ notification.text }}")</script>
+    {% endif %}
+{% endif %}
 </body>
 
 </html>
