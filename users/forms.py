@@ -64,20 +64,18 @@ class ResetConfirmForm(forms.Form):
     salt = forms.CharField(required=True, widget=forms.HiddenInput())
     init_vector = forms.CharField(required=True, widget=forms.HiddenInput())
 
-    # def save(self):
-    #     email = self.cleaned_data['email']
-    #     auth_key = self.cleaned_data['auth_key']
-    #     salt = self.cleaned_data['salt']
-    #     init_vector = self.cleaned_data['init_vector']
-    #
-    #     user = User(
-    #         email=email,
-    #         auth_key=auth_key,
-    #         salt=salt,
-    #         init_vector=init_vector,
-    #         is_active=True
-    #     )
-    #
-    #     user.save()
-    #
-    #     return user
+    def save(self):
+        email = self.cleaned_data['email']
+        auth_key = self.cleaned_data['auth_key']
+        salt = self.cleaned_data['salt']
+        init_vector = self.cleaned_data['init_vector']
+
+        user = User.objects.filter(email=email).first()
+
+        if user:
+            user.auth_key = auth_key
+            user.salt = salt
+            user.init_vector = init_vector
+            user.save()
+
+        return user

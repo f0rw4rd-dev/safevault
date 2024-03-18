@@ -3,8 +3,8 @@ from django.http import JsonResponse
 from django.utils import timezone
 from django.views.generic import View
 from django.core.mail import send_mail
-from .models import User
-from .forms import LoginForm, RegisterForm, ResetForm
+from .models import User, ResetPassword
+from .forms import LoginForm, RegisterForm, ResetForm, ResetConfirmForm
 from .decorators import check_if_user_is_authorized, check_if_user_is_not_authorized
 from io import BytesIO
 
@@ -146,18 +146,18 @@ class ResetView(View):
 
             try:
                 user = User.objects.get(email=email)
-                user.resetpassword_set.all().delete()
+                user.reset_records.all().delete()
 
                 reset_key = secrets.token_hex(64)
-                reset_password = user.resetpassword_set.create(reset_key=reset_key)
+                reset_password = user.reset_records.create(reset_key=reset_key)
                 reset_link = request.build_absolute_uri(reverse('users:reset-confirm', args=[reset_key]))
 
                 send_mail(
-                    'Сброс пароля',
-                    f'Перейдите по ссылке для сброса пароля: {reset_link}',
-                    'admin@example.com',
-                    [email],
-                    fail_silently=False,
+                    subject='Сброс пароля',
+                    message=f'Перейдите по ссылке для сброса пароля: {reset_link}',
+                    from_email='safevault.official@gmail.com',
+                    recipient_list=[email],
+                    fail_silently=False
                 )
 
                 notification_text = 'На ваш адрес электронной почты отправлено письмо с инструкциями по сбросу пароля'
@@ -175,7 +175,48 @@ class ResetConfirmView(View):
 
     @check_if_user_is_authorized
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {})
+        reset_key = request.GET.get('reset_key')
+        reset_password = ResetPassword.objects.filter(reset_key=reset_key).first()
+
+        if not reset_password:
+            return redirect(reverse('users:reset'))
+
+        if reset_password.reset_end_time < timezone.now():
+            reset_password.delete()
+            notification_text = 'Ссылка для сброса мастер-пароля устарела'
+            notification_redirect_url = f'{request.scheme}://{request.get_host()}{reverse('users:reset')}'
+            return render(request, self.template_name, {'register_form': RegisterForm(), 'notification': {'func': 'notifyError', 'text': notification_text, 'redirectUrl': notification_redirect_url}})
+
+        return render(request, self.template_name, {'reset_confirm_form': ResetConfirmForm()})
+
+    @check_if_user_is_authorized
+    def post(self, request, *args, **kwargs):
+        reset_confirm_form = ResetConfirmForm(request.POST)
+
+        if reset_confirm_form.is_valid():
+            email = reset_confirm_form.cleaned_data['email']
+
+            if not User.objects.filter(email=email).exists():
+                notification_text = 'Пользователя с данной почтой не существует'
+                return render(request, self.template_name, {'reset_confirm_form': ResetConfirmForm(), 'notification': {'func': 'notifyError', 'text': notification_text}})
+
+            user = reset_confirm_form.save()
+
+            if user:
+                user.note_records.all().delete()
+                user.address_records.all().delete()
+                user.password_records.all().delete()
+                user.document_records.all().delete()
+                user.bankcard_records.all().delete()
+
+                user.reset_records.all().delete()
+
+            notification_text = 'Вы успешно изменили мастер-пароль, выполните авторизацию'
+            notification_redirect_url = f'{request.scheme}://{request.get_host()}{reverse('users:login')}'
+            return render(request, self.template_name, {'reset_confirm_form': ResetConfirmForm(), 'notification': {'func': 'notifySuccess', 'text': notification_text, 'redirectUrl': notification_redirect_url}})
+
+        notification_text = 'Убедитесь, что все поля корректно заполнены'
+        return render(request, self.template_name, {'reset_confirm_form': ResetConfirmForm(), 'notification': {'func': 'notifyError', 'text': notification_text}})
 
 
 class LogoutView(View):

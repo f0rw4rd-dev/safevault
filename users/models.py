@@ -34,6 +34,6 @@ def default_reset_end_time():
 
 
 class ResetPassword(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reset_records')
     reset_key = models.CharField(max_length=64, blank=False, null=False)
     reset_end_time = models.DateTimeField(default=default_reset_end_time, blank=False, null=False)

@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', (event) => {
-    setupRegisterFormSubmit();
+    setupResetConfirmFormSubmit();
     setupPasswordGeneratorAndStrengthEstimation('id_master_password', 'id_password_strength', 'id_generate_password');
 });
 
-function setupRegisterFormSubmit() {
+function setupResetConfirmFormSubmit() {
     document.getElementById('id_form_reset_confirm').addEventListener('submit', async function (e) {
         e.preventDefault();
         const form = e.target;
