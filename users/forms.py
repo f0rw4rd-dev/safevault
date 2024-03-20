@@ -63,6 +63,7 @@ class ResetConfirmForm(forms.Form):
     auth_key = forms.CharField(required=True, widget=forms.HiddenInput())
     salt = forms.CharField(required=True, widget=forms.HiddenInput())
     init_vector = forms.CharField(required=True, widget=forms.HiddenInput())
+    reset_key = forms.CharField(required=True, widget=forms.HiddenInput())
 
     def save(self):
         email = self.cleaned_data['email']

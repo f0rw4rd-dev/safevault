@@ -44,11 +44,12 @@
                                         </div>
                                         <small class="form-text d-flex">Разрешены только буквы английского алфавита, цифры и специальные символы (@&amp;$!#?)</small>
                                         <small class="form-text text-danger d-flex">В случае утраты мастер-пароля, Вы не сможете его восстановить!</small>
-                                        <small class="form-text d-flex" id="formReset_passwordStrength"></small>
+                                        <small class="form-text d-flex" id="id_password_strength"></small>
                                     </div>
                                     {{ reset_confirm_form.auth_key }}
                                     {{ reset_confirm_form.salt }}
                                     {{ reset_confirm_form.init_vector }}
+                                    <input type="hidden" name="{{ reset_confirm_form.reset_key.name }}" value="{{ request.GET.reset_key }}">
                                     <button class="btn btn-dark d-block btn-user w-100 fs-6" type="submit">Сбросить</button>
                                     <hr>
                                 </form>

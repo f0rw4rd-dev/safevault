@@ -59,7 +59,6 @@ class LoginView(View):
 
                 if timezone.now() - user.auth_last_attempt_time > timezone.timedelta(minutes=30) or timezone.now() > user.auth_lock_end_time and user.auth_attempts == 0:
                     reset_attempts(user)
-
                 if timezone.now() < user.auth_lock_end_time:
                     notification_text = 'Превышено количество попыток авторизации, подождите окончания блокировки'
                     return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifyError', 'text': notification_text}})
@@ -183,9 +182,7 @@ class ResetConfirmView(View):
 
         if reset_password.reset_end_time < timezone.now():
             reset_password.delete()
-            notification_text = 'Ссылка для сброса мастер-пароля устарела'
-            notification_redirect_url = f'{request.scheme}://{request.get_host()}{reverse('users:reset')}'
-            return render(request, self.template_name, {'register_form': RegisterForm(), 'notification': {'func': 'notifyError', 'text': notification_text, 'redirectUrl': notification_redirect_url}})
+            return redirect(reverse('users:reset'))
 
         return render(request, self.template_name, {'reset_confirm_form': ResetConfirmForm()})
 
@@ -195,10 +192,14 @@ class ResetConfirmView(View):
 
         if reset_confirm_form.is_valid():
             email = reset_confirm_form.cleaned_data['email']
+            reset_key = request.GET.get('reset_key')
 
             if not User.objects.filter(email=email).exists():
                 notification_text = 'Пользователя с данной почтой не существует'
                 return render(request, self.template_name, {'reset_confirm_form': ResetConfirmForm(), 'notification': {'func': 'notifyError', 'text': notification_text}})
+
+            if not ResetPassword.objects.filter(reset_key=reset_key, user__email=email).exists():
+                return redirect(reverse('users:reset'))
 
             user = reset_confirm_form.save()
 
