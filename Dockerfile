@@ -28,3 +28,4 @@ COPY . $HOME
 #COPY --chown=root . /var/www/safevault
 #RUN chmod +x /var/www/safevault/entrypoint.sh
 ENTRYPOINT ["/var/www/safevault/entrypoint.sh"]
+RUN chmod +x /var/www/safevault/entrypoint.sh
