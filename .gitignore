@@ -140,3 +140,7 @@ GitHub.sublime-settings
 # Configs
 configs/*
 !configs/config.example.env
+
+# JS libraries
+!static/libraries/argon2-browser/dist
+!static/libraries/argon2-browser/lib
