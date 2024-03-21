@@ -113,6 +113,11 @@ function setupFormSubmit(formId, encryptionKey) {
             return null;
         }
 
+        if (formData.issuing_authority.trim().length > 256) {
+            notifyError('Название органа выдачи не должно превышать 256 символов');
+            return null;
+        }
+
         if (formData.extra_data.trim().length > 4096) {
             notifyError('Содержимое не должно превышать 4096 символов');
             return null;
