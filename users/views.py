@@ -79,7 +79,7 @@ class LoginView(View):
                 request.session['user_id'] = user.id
 
                 notification_text = 'Вы успешно авторизованы'
-                notification_redirect_url = f'{request.scheme}://{request.get_host()}{reverse('passwords:passwords')}'
+                notification_redirect_url = f'{request.scheme}://{request.get_host()}{reverse("passwords:passwords")}'
                 return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifySuccess', 'text': notification_text, 'redirectUrl': notification_redirect_url}})
 
             try:
@@ -122,7 +122,7 @@ class RegisterView(View):
             register_form.save()
 
             notification_text = 'Вы успешно зарегистрировались, выполните авторизацию'
-            notification_redirect_url = f'{request.scheme}://{request.get_host()}{reverse('users:login')}'
+            notification_redirect_url = f'{request.scheme}://{request.get_host()}{reverse("users:login")}'
             return render(request, self.template_name, {'register_form': RegisterForm(), 'notification': {'func': 'notifySuccess', 'text': notification_text, 'redirectUrl': notification_redirect_url}})
 
         notification_text = 'Убедитесь, что все поля корректно заполнены'
@@ -213,7 +213,7 @@ class ResetConfirmView(View):
                 user.reset_records.all().delete()
 
             notification_text = 'Вы успешно изменили мастер-пароль, выполните авторизацию'
-            notification_redirect_url = f'{request.scheme}://{request.get_host()}{reverse('users:login')}'
+            notification_redirect_url = f'{request.scheme}://{request.get_host()}{reverse("users:login")}'
             return render(request, self.template_name, {'reset_confirm_form': ResetConfirmForm(), 'notification': {'func': 'notifySuccess', 'text': notification_text, 'redirectUrl': notification_redirect_url}})
 
         notification_text = 'Убедитесь, что все поля корректно заполнены'
