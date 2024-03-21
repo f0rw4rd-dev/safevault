@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', default=False))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', ' ').split(' ')
 
 # Application definition
 
@@ -83,8 +83,12 @@ WSGI_APPLICATION = 'safevault.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.environ.get('DJANGO_DATABASE_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.environ.get('DJANGO_DATABASE_NAME', BASE_DIR / 'db.sqlite3'),
+        'USER': os.environ.get('DJANGO_DATABASE_USER', 'user'),
+        'PASSWORD': os.environ.get('DJANGO_DATABASE_PASSWORD', 'password'),
+        'HOST': os.environ.get('DJANGO_DATABASE_HOST', '127.0.0.1'),
+        'PORT': os.environ.get('DJANGO_DATABASE_PORT', '5432')
     }
 }
 
@@ -152,3 +156,5 @@ EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
+
+CSRF_TRUSTED_ORIGINS = tuple(os.environ.get('DJANGO_CSRF_TRUSTED_ORIGINS', ' ').split(' '))

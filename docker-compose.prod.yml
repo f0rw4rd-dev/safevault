@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+    django:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        command: gunicorn safevault.wsgi:application --bind 0.0.0.0:8000
+        volumes:
+            - static_volume:/var/www/safevault/static
+            - media_volume:/var/www/safevault/media
+        expose:
+            - 8000
+        env_file:
+            - ./configs/config.prod.env
+    nginx:
+        build: ./nginx
+        volumes:
+            - static_volume:/var/www/safevault/static
+            - media_volume:/var/www/safevault/media
+        ports:
+            - 8000:80
+        depends_on:
+            - django
+
+volumes:
+    static_volume:
+    media_volume:
