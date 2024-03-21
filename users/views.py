@@ -78,6 +78,10 @@ class LoginView(View):
                 request.session.set_expiry(user.session_duration * 60)
                 request.session['user_id'] = user.id
 
+                for records in [user.note_records, user.address_records, user.password_records, user.document_records, user.bankcard_records]:
+                    expired_records = records.filter(status=2, change_status_time__lt=timezone.now() - timezone.timedelta(days=30))
+                    expired_records.delete()
+
                 notification_text = 'Вы успешно авторизованы'
                 notification_redirect_url = f'{request.scheme}://{request.get_host()}{reverse("passwords:passwords")}'
                 return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifySuccess', 'text': notification_text, 'redirectUrl': notification_redirect_url}})
@@ -204,13 +208,8 @@ class ResetConfirmView(View):
             user = reset_confirm_form.save()
 
             if user:
-                user.note_records.all().delete()
-                user.address_records.all().delete()
-                user.password_records.all().delete()
-                user.document_records.all().delete()
-                user.bankcard_records.all().delete()
-
-                user.reset_records.all().delete()
+                for records in [user.note_records, user.address_records, user.password_records, user.document_records, user.bankcard_records, user.reset_records]:
+                    records.all().delete()
 
             notification_text = 'Вы успешно изменили мастер-пароль, выполните авторизацию'
             notification_redirect_url = f'{request.scheme}://{request.get_host()}{reverse("users:login")}'
