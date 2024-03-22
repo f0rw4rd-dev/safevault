@@ -59,6 +59,7 @@ class LoginView(View):
 
                 if timezone.now() - user.auth_last_attempt_time > timezone.timedelta(minutes=30) or timezone.now() > user.auth_lock_end_time and user.auth_attempts == 0:
                     reset_attempts(user)
+                    
                 if timezone.now() < user.auth_lock_end_time:
                     notification_text = 'Превышено количество попыток авторизации, подождите окончания блокировки'
                     return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifyError', 'text': notification_text}})
