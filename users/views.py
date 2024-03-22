@@ -59,7 +59,7 @@ class LoginView(View):
 
                 if timezone.now() - user.auth_last_attempt_time > timezone.timedelta(minutes=30) or timezone.now() > user.auth_lock_end_time and user.auth_attempts == 0:
                     reset_attempts(user)
-                    
+
                 if timezone.now() < user.auth_lock_end_time:
                     notification_text = 'Превышено количество попыток авторизации, подождите окончания блокировки'
                     return render(request, self.template_name, {'login_form': LoginForm(), 'notification': {'func': 'notifyError', 'text': notification_text}})
@@ -82,6 +82,8 @@ class LoginView(View):
                 for records in [user.note_records, user.address_records, user.password_records, user.document_records, user.bankcard_records]:
                     expired_records = records.filter(status=2, change_status_time__lt=timezone.now() - timezone.timedelta(days=30))
                     expired_records.delete()
+
+                reset_attempts(user)
 
                 notification_text = 'Вы успешно авторизованы'
                 notification_redirect_url = f'{request.scheme}://{request.get_host()}{reverse("passwords:passwords")}'
