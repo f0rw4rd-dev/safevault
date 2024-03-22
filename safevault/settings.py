@@ -157,4 +157,4 @@ EMAIL_USE_SSL = True
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 
-# CSRF_TRUSTED_ORIGINS = tuple(os.environ.get('DJANGO_CSRF_TRUSTED_ORIGINS', ' ').split(' '))
+CSRF_TRUSTED_ORIGINS = tuple(os.environ.get('DJANGO_CSRF_TRUSTED_ORIGINS', 'http://localhost:8000').split(' '))
