@@ -8,16 +8,16 @@ import datetime
 
 
 class User(AbstractBaseUser):
-    email = models.EmailField(max_length=128, unique=True, blank=False, null=False)
-    auth_key = models.CharField(max_length=2560, blank=False, null=False)
-    salt = models.CharField(max_length=160, blank=False, null=False)
-    init_vector = models.CharField(max_length=160, blank=False, null=False)
+    email = models.EmailField(max_length=128, unique=True)
+    auth_key = models.CharField(max_length=2560)
+    salt = models.CharField(max_length=160)
+    init_vector = models.CharField(max_length=160)
     tfa_key = models.CharField(max_length=160, blank=True, null=True)
-    session_duration = models.PositiveIntegerField(default=30, blank=False, null=False)
-    is_active = models.BooleanField(default=True, blank=False, null=False)
-    auth_attempts = models.PositiveIntegerField(default=3, blank=False, null=False)
-    auth_last_attempt_time = models.DateTimeField(default=datetime.datetime(1970, 1, 1, 0, 0, 0, 0, datetime.timezone.utc), blank=False, null=False)
-    auth_lock_end_time = models.DateTimeField(default=datetime.datetime(1970, 1, 1, 0, 0, 0, 0, datetime.timezone.utc), blank=False, null=False)
+    session_duration = models.PositiveIntegerField(default=30)
+    is_active = models.BooleanField(default=True)
+    auth_attempts = models.PositiveIntegerField(default=3)
+    auth_last_attempt_time = models.DateTimeField(default=datetime.datetime(1970, 1, 1, 0, 0, 0, 0, datetime.timezone.utc))
+    auth_lock_end_time = models.DateTimeField(default=datetime.datetime(1970, 1, 1, 0, 0, 0, 0, datetime.timezone.utc))
 
     objects = UserManager()
 
