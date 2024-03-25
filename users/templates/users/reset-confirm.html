@@ -17,7 +17,7 @@
                 <div class="card-body p-0">
                     <div class="row my-5">
                         <div class="col-lg-6 d-none d-lg-flex">
-                            <div class="flex-grow-1 bg-login-image" style="'{% static 'images/authorization/introduction3.jpg' %}'"></div>
+                            <div class="flex-grow-1 bg-login-image" style="background-image: url('{% static 'images/authorization/introduction3.jpg' %}');"></div>
                         </div>
                         <div class="col-lg-6">
                             <div class="p-5">
@@ -49,7 +49,7 @@
                                     {{ reset_confirm_form.auth_key }}
                                     {{ reset_confirm_form.salt }}
                                     {{ reset_confirm_form.init_vector }}
-                                    <input type="hidden" name="{{ reset_confirm_form.reset_key.name }}" value="{{ request.GET.reset_key }}">
+                                    <input type="hidden" name="{{ reset_confirm_form.reset_key.name }}" value="{{ reset_key }}">
                                     <button class="btn btn-dark d-block btn-user w-100 fs-6" type="submit">Сбросить</button>
                                     <hr>
                                 </form>
@@ -70,7 +70,9 @@
 
 {% include 'scripts.html' %}
 
-<script src="{% static 'libraries/argon2-browser/lib/argon2.js' %}"></script>
+<script src="{% static 'libraries/argon2-browser/dist/argon2-bundled.min.js' %}"></script>
+<script src="{% static 'js/encryption.js' %}"></script>
+<script src="{% static 'js/valid.js' %}"></script>
 <script src="{% static 'js/passwords.js' %}"></script>
 <script src="{% static 'js/handlers/passwords.js' %}"></script>
 <script src="{% static 'js/pages/resetConfirm.js' %}"></script>

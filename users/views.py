@@ -155,13 +155,13 @@ class ResetView(View):
                 user.reset_records.all().delete()
 
                 reset_key = secrets.token_hex(64)
-                reset_password = user.reset_records.create(reset_key=reset_key)
+                user.reset_records.create(reset_key=reset_key)
                 reset_link = request.build_absolute_uri(reverse('users:reset-confirm', args=[reset_key]))
 
                 send_mail(
                     subject='Сброс пароля',
                     message=f'Перейдите по ссылке для сброса пароля: {reset_link}',
-                    from_email='safevault.official@gmail.com',
+                    from_email='safevault.official@mail.ru',
                     recipient_list=[email],
                     fail_silently=False
                 )
@@ -181,7 +181,7 @@ class ResetConfirmView(View):
 
     @check_if_user_is_authorized
     def get(self, request, *args, **kwargs):
-        reset_key = request.GET.get('reset_key')
+        reset_key = self.kwargs.get('reset_key', '')
         reset_password = ResetPassword.objects.filter(reset_key=reset_key).first()
 
         if not reset_password:
@@ -191,7 +191,7 @@ class ResetConfirmView(View):
             reset_password.delete()
             return redirect(reverse('users:reset'))
 
-        return render(request, self.template_name, {'reset_confirm_form': ResetConfirmForm()})
+        return render(request, self.template_name, {'reset_confirm_form': ResetConfirmForm(), 'reset_key': reset_key})
 
     @check_if_user_is_authorized
     def post(self, request, *args, **kwargs):
@@ -199,7 +199,7 @@ class ResetConfirmView(View):
 
         if reset_confirm_form.is_valid():
             email = reset_confirm_form.cleaned_data['email']
-            reset_key = request.GET.get('reset_key')
+            reset_key = request.POST.get('reset_key')
 
             if not User.objects.filter(email=email).exists():
                 notification_text = 'Пользователя с данной почтой не существует'
