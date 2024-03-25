@@ -39,12 +39,13 @@
                                             <div class="mb-3">
                                                 <label class="form-label">Время жизни сессии:</label>
                                                 <select class="form-select" name="session_duration">
-                                                    <option value="5">5 минут</option>
-                                                    <option value="15">15 минут</option>
-                                                    <option value="30">30 минут</option>
-                                                    <option value="60">1 час</option>
-                                                    <option value="120">2 часа</option>
+                                                    <option value="5" {% if user.session_duration == 5 %}selected{% endif %}>5 минут</option>
+                                                    <option value="15" {% if user.session_duration == 15 %}selected{% endif %}>15 минут</option>
+                                                    <option value="30" {% if user.session_duration == 30 %}selected{% endif %}>30 минут</option>
+                                                    <option value="60" {% if user.session_duration == 60 %}selected{% endif %}>1 час</option>
+                                                    <option value="120" {% if user.session_duration == 120 %}selected{% endif %}>2 часа</option>
                                                 </select>
+
                                                 <small class="form-text">Время, через которое будет необходимо заново авторизоваться после отсутствия активности</small>
                                             </div>
                                             <input type="hidden" id="id_operation" name="operation" value="change_session_duration">

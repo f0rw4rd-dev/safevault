@@ -256,11 +256,11 @@ class SettingsView(View):
         operation = request.POST.get('operation')
 
         if operation == 'turn_on_tfa':
-            tfa_code = request.POST.get('tfa_code')
+            tfa_key = request.POST.get('tfa_key')
             code = request.POST.get('code')
 
-            if self.is_six_digits(code) and pyotp.TOTP(tfa_code).verify(code):
-                user.tfa_key = tfa_code
+            if self.is_six_digits(code) and pyotp.TOTP(tfa_key).verify(code):
+                user.tfa_key = tfa_key
                 user.save()
 
                 notification_text = 'Двухфакторная аутентификация успешно подключена'
